@@ -86,12 +86,12 @@ void Radio_t::Start(bool& flag) {
 
         const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
         //  const auto* buff {reinterpret_cast<const char *>(mrf24j40_spi.get_rxinfo()->rx_data)};
-        #ifdef ENABLE_PRINTS_DBG
+        #ifdef DBG_RADIO
             std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
             std::cout<<"\n" ;
         #endif
         const std::string pf(msj);
-        #ifdef ENABLE_PRINTS_DBG
+        #ifdef DBG_RADIO
             for(const auto& byte : pf) std::cout << byte ; 
         #endif
         std::cout<<"\n" ;         
@@ -185,8 +185,9 @@ void Radio_t::handle_rx() {
         std::printf("\tdata_length : " + std::to_string(recevive_data_length) );        
         std::printf("\n");        
         std::printf(reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data ));
-        //for (auto& byte : mrf24j40_spi.get_rxinfo()->rx_data)std::cout<<byte;        
-        //monitor->print("\n",files++,col);
+        
+        for (auto& byte : mrf24j40_spi.get_rxinfo()->rx_data)std::cout<<byte;        
+        std::cout<<"\n";;
 
     #ifdef DBG_PRINT_GET_INFO 
       
@@ -211,7 +212,7 @@ void Radio_t::handle_rx() {
         
         update(reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data) ); //update(tempString.data());
         
-        std::printf(temperatureToString.data());
+        //std::printf(temperatureToString.data());
         
         msj_txt = reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data) ;        
                 
