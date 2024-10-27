@@ -87,8 +87,8 @@ void Radio_t::Start(bool& flag) {
         const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
         //  const auto* buff {reinterpret_cast<const char *>(mrf24j40_spi.get_rxinfo()->rx_data)};
         #ifdef ENABLE_PRINTS_DBG
-        //std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
-        //std::cout<<"\n" ;
+        std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
+        std::cout<<"\n" ;
       #endif
         const std::string pf(msj);
         #ifdef ENABLE_PRINTS_DBG
@@ -126,7 +126,7 @@ void Radio_t::Start(bool& flag) {
     {    
         const int positionAdvance{15};
 
-        const auto*     packet_data = reinterpret_cast<const char*>(str_view.data());
+        const auto* packet_data = reinterpret_cast<const char*>(str_view.data());
 
         std::string  PacketDataTmp (packet_data += positionAdvance);
         PacketDataTmp.resize(38);
