@@ -69,8 +69,8 @@ void Radio_t::Start(bool& flag) {
     const unsigned long current_time = 1000000;
     if (current_time - m_last_time > m_tx_interval) {
         m_last_time = current_time;
-    #ifdef MRF24_TRANSMITER_ENABLE   
-        #ifdef DBG
+    //#ifdef MRF24_TRANSMITER_ENABLE   
+        #ifdef DBG_RADIO
             #ifdef MACADDR64
                 std::cout<<"send msj 64() ... \n";
             #else
@@ -79,7 +79,7 @@ void Radio_t::Start(bool& flag) {
         #endif
         buffer_transmiter.head=HEAD; 
         buffer_transmiter.size=(~strlen(MSJ))&0xffff ;
-        #ifdef ENABLE_PRINTS_DBG
+        #ifdef DBG_RADIO
         //std::cout<<"\n strlen(MSJ) : "<<  strlen(MSJ)<<"\n";  
         #endif  
         std::strcpy(buffer_transmiter.data , MSJ);
@@ -87,21 +87,21 @@ void Radio_t::Start(bool& flag) {
         const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
         //  const auto* buff {reinterpret_cast<const char *>(mrf24j40_spi.get_rxinfo()->rx_data)};
         #ifdef ENABLE_PRINTS_DBG
-        std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
-        std::cout<<"\n" ;
-      #endif
+            std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
+            std::cout<<"\n" ;
+        #endif
         const std::string pf(msj);
         #ifdef ENABLE_PRINTS_DBG
             for(const auto& byte : pf) std::cout << byte ; 
         #endif
         std::cout<<"\n" ;         
-        #ifdef USE_MRF24_TX 
+    //    #ifdef USE_MRF24_TX 
             #ifdef MACADDR64
                 mrf24j40_spi.send(ADDRESS_LONG_SLAVE, msj);               
             #elif defined(MACADDR16)
                 mrf24j40_spi.send(ADDRESS_SLAVE, msj);                                
             #endif
-                      
+
 //         const auto status = mrf24j40_spi.read_short(MRF_TXSTAT);//or TXNSTAT =0: Transmissionwassuccessful         
          const auto status = mrf24j40_spi.getStatusInfoTx();//mrf24j40_spi.check_ack(&handle_tx);
           if (status==0) {
@@ -114,7 +114,7 @@ void Radio_t::Start(bool& flag) {
                 std::cout<<"\n";
             #endif
         }
-        #endif    
+        //#endif    
     }
 }
 
