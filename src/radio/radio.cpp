@@ -69,7 +69,7 @@ void Radio_t::Start(bool& flag) {
     const unsigned long current_time = 1000000;
     if (current_time - m_last_time > m_tx_interval) {
         m_last_time = current_time;
-    //#ifdef MRF24_TRANSMITER_ENABLE   
+    #ifdef MRF24_TRANSMITER_ENABLE   
         #ifdef DBG_RADIO
             #ifdef MACADDR64
                 std::cout<<"send msj 64() ... \n";
@@ -95,13 +95,13 @@ void Radio_t::Start(bool& flag) {
             for(const auto& byte : pf) std::cout << byte ; 
         #endif
         std::cout<<"\n" ;         
-    //    #ifdef USE_MRF24_TX 
+        #ifdef USE_MRF24_TX 
             #ifdef MACADDR64
                 mrf24j40_spi.send(ADDRESS_LONG_SLAVE, msj);               
             #elif defined(MACADDR16)
                 mrf24j40_spi.send(ADDRESS_SLAVE, msj);                                
             #endif
-
+    #endif
 //         const auto status = mrf24j40_spi.read_short(MRF_TXSTAT);//or TXNSTAT =0: Transmissionwassuccessful         
          const auto status = mrf24j40_spi.getStatusInfoTx();//mrf24j40_spi.check_ack(&handle_tx);
           if (status==0) {
@@ -114,7 +114,7 @@ void Radio_t::Start(bool& flag) {
                 std::cout<<"\n";
             #endif
         }
-        //#endif    
+    #endif    
     }
 }
 
@@ -130,26 +130,24 @@ void Radio_t::Start(bool& flag) {
 
         std::string  PacketDataTmp (packet_data += positionAdvance);
         PacketDataTmp.resize(38);
-
-        //SET_COLOR(SET_COLOR_GRAY_TEXT);
-
         std::cout<<"\n";
-
-
     return ;    
     }
 
 
-void Radio_t::handle_tx() {    
-    const auto status = mrf24j40_spi.get_txinfo()->tx_ok;
-         if (status) {
-             std::cout<<"\thandle_tx() : TX went ok, got ACK success ! \n";
-         } else {
-            std::cout<<"\n\tTX failed after \n";
-            std::cout<<"retries : "<<mrf24j40_spi.get_txinfo()->retries;
-            std::cout<<" \n";
-         }
-    return;
+    void Radio_t::handle_tx() {    
+        #ifdef MRF24_TRANSMITER_ENABLE
+
+        const auto status = mrf24j40_spi.get_txinfo()->tx_ok;
+             if (status) {
+                 std::cout<<"\thandle_tx() : TX went ok, got ACK success ! \n";
+             } else {
+                std::cout<<"\n\tTX failed after \n";
+                std::cout<<"retries : "<<mrf24j40_spi.get_txinfo()->retries;
+                std::cout<<" \n";
+             }
+             #endif
+        return;
     }
 
  
@@ -157,13 +155,7 @@ void Radio_t::handle_tx() {
  
 void Radio_t::handle_rx() {        
     #ifdef MRF24_RECEIVER_ENABLE
-    //int files {POSITIOM_INIT_PRINTS};
-    //int col {0};
     std::vector<char>bufferMonitor(128);
-
-    //auto  monitor{std::make_unique <FFLUSH::Fflush_t>()};
-
-    //files = POSITIOM_INIT_PRINTS;
 
     std::printf("received a packet ... ");    //std::cout << " \nreceived a packet ... ";
     sprintf(bufferMonitor.data(),"0x%x\n",mrf24j40_spi.get_rxinfo()->frame_length);
