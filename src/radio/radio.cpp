@@ -109,7 +109,7 @@ void Radio_t::Start(bool& flag) {
           } 
           if (status==1)  {//0 = Succeeded
               std::cout<<"\tTX ACK Ok   \n";
-            s#ifdef DBG_RADIO
+            #ifdef DBG_RADIO
                 std::cout<<" retries : "<<std::to_string(mrf24j40_spi.get_txinfo()->retries);
                 std::cout<<"\n";
             #endif
