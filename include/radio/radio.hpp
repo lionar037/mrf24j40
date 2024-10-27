@@ -2,6 +2,7 @@
 
 #include <gpio/gpio.hpp>
 #include <config/config.hpp>
+#include <radio/data.hpp>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
