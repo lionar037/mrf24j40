@@ -131,7 +131,7 @@ void Radio_t::Start(bool& flag) {
         std::string  PacketDataTmp (packet_data += positionAdvance);
         PacketDataTmp.resize(38);
 
-        SET_COLOR(SET_COLOR_GRAY_TEXT);
+        //SET_COLOR(SET_COLOR_GRAY_TEXT);
 
         std::cout<<"\n";
 
