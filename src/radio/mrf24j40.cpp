@@ -32,8 +32,8 @@ namespace DEBUGGER{
 }
 
 namespace MRF24J40{
-            // aMaxPHYPacketSize = 127, from the 802.15.4-2006 standard.
-    static uint8_t rx_buf[127];
+    const int aMaxPHYPacketSize = 127;//, from the 802.15.4-2006 standard.
+    static uint8_t rx_buf[aMaxPHYPacketSize];
 
     static int ignoreBytes { 0 }; // bytes to ignore, some modules behaviour.
     static bool bufPHY { false }; // flag to buffer all bytes in PHY Payload, or not
