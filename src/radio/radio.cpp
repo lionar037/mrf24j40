@@ -153,7 +153,7 @@ void Radio_t::handle_rx() {
     std::printf("received a packet ... ");    //std::cout << " \nreceived a packet ... ";
     //sprintf(bufferMonitor.data(),"0x%x\n",mrf24j40_spi->get_rxinfo()->frame_length);
     
-    std::memcpy(bufferMonitor.data() , get_rxbuf , mrf24j40_spi->get_rxinfo()->frame_length);
+    std::memcpy(bufferMonitor.data() , get_rxbuf() , mrf24j40_spi->get_rxinfo()->frame_length);
 
     std::cout<< "tamaño del paquete : " << std::to_string(bufferMonitor.size())<<"\n";
     std::printf(bufferMonitor.data());//    std::cout << " bytes long " ;
