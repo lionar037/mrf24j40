@@ -157,9 +157,9 @@ void Radio_t::handle_tx() {
  
 void Radio_t::handle_rx() {        
     #ifdef MRF24_RECEIVER_ENABLE
-    int files {POSITIOM_INIT_PRINTS};
-    int col {0};
-    char bufferMonitor[128];
+    //int files {POSITIOM_INIT_PRINTS};
+    //int col {0};
+    std::vector<char>bufferMonitor(128);
 
     auto  monitor{std::make_unique <FFLUSH::Fflush_t>()};
 
