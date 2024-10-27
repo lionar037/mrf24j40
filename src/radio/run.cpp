@@ -16,7 +16,7 @@ namespace MRF24J40{
 
 
 namespace RUN{
-    extern MRF24J40::Mrf24j_t mrf24j40_spi ;    
+    //extern MRF24J40::Mrf24j_t mrf24j40_spi ;    
     
 void Run_t::start()
 {
