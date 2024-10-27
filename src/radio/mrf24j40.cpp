@@ -165,7 +165,6 @@ namespace MRF24J40{
      * Simple send 16, with acks, not much of anything.. assumes src16 and local pan only.
         * @param data
     */
-
     void Mrf24j_t::set_interrupts(void) {
             // interrupts for rx and tx normal complete
         #ifdef DBG_MRF
@@ -295,6 +294,7 @@ namespace MRF24J40{
     #endif        
         return tx_info.tx_ok ;
     }
+
     /**
      * Call this function periodically, it will invoke your nominated handlers
      */
@@ -339,6 +339,7 @@ namespace MRF24J40{
 
         return false;
     }
+
     /**
      * Set RX mode to promiscuous, or normal
      */
@@ -424,17 +425,14 @@ void Mrf24j_t::settings_mrf(void){
 
 
     void Mrf24j_t::pinMode(int i, bool b){
-    //return;
     }
 
     void Mrf24j_t::digitalWrite(int i, bool b){
-    //return;
     }
 
     void Mrf24j_t::delay(const int64_t t){
         TYME::Time_t time ;
         time.delay_ms(t);
-    //return;
     }
 
     void Mrf24j_t::interrupts(){
