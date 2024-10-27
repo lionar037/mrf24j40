@@ -86,7 +86,7 @@ struct Mrf24j_t //: public SPI::Spi
         void                 set_palna(bool);
        // void                 send16(uint16_t ,const char*);
         template <typename T>
-        void                    send_template(uint64_t, const T&) ;
+        void                    send_template(const uint64_t, const T&) ;
 
         void                    send(uint64_t ,const std::string& );
         //void                    send64(uint64_t ,const std::string&);
