@@ -182,7 +182,7 @@ void Radio_t::handle_rx() {
         
         std::printf("ASCII data (relevant data) :"); //std::cout<<"\r\nASCII data (relevant data) :\n";
         const auto recevive_data_length = mrf24j40_spi.rx_datalength();
-        std::printf("\tdata_length : " + std::to_string(recevive_data_length) );        
+        std::cout<<"\tdata_length : " << std::to_string(recevive_data_length) ;        
         std::printf("\n");        
         std::printf(reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data ));
 
@@ -197,16 +197,16 @@ void Radio_t::handle_rx() {
         else{
             std::printf("\nmac no es igual\n") ;
         }
-        std::printf("\ndata_receiver->mac : " + std::to_string (add )+ "\n");
-        std::printf("buffer_receiver->head : " + packet_data_tmp->head + "n");
+        std::cout<<"\ndata_receiver->mac : " << std::to_string (add )<< "\n";
+        std::cout<<"buffer_receiver->head : " << packet_data_tmp->head << "\n";
         auto bs = (~packet_data_tmp->size)&0xffff;
-        std::printf("buffer_receiver->size : " + reinterpret_cast<const int *>(bs) + "\n" );
-        std::printf("data_receiver->data : " + reinterpret_cast<const char *>(packet_data_tmp->data) + "\n" );
-        std::printf("\nbuff: \n" + buff );
+        std::cout<<"buffer_receiver->size : " << reinterpret_cast<const int *>(bs) << "\n" ;
+        std::cout<<"data_receiver->data : " << reinterpret_cast<const char *>(packet_data_tmp->data) << "\n" ;
+        std::cout<<"\nbuff: \n" << buff ;
         std::printf("\r\n" );
     #endif            
-        std::printf("LQI : " + std::to_string(mrf24j40_spi.get_rxinfo()->lqi)   );
-        std::printf("RSSI : " + std::to_string(mrf24j40_spi.get_rxinfo()->rssi) );
+        std::cout<<"LQI : " << std::to_string(mrf24j40_spi.get_rxinfo()->lqi)   <<"\n";
+        std::cout<<"RSSI : "<<  std::to_string(mrf24j40_spi.get_rxinfo()->rssi) <<"\n";
     #endif
         
         
@@ -215,7 +215,7 @@ void Radio_t::handle_rx() {
         //std::printf(temperatureToString.data());
         
         msj_txt = reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data) ;        
-                
+                std::cout<<msj_txt <<"\n";
         return;    
     }
 
