@@ -24,21 +24,21 @@ void Run_t::start()
         system("clear"); 
     
     try{
-            auto mrf { std::make_unique<MRF24J40::Radio_t>()};        // Inicializar hilos y ejecutar las clases en paralelo
+            auto zigbee { std::make_unique<MRF24J40::Radio_t>()};        // Inicializar hilos y ejecutar las clases en paralelo
                  
 
-            std::thread thread2(&DEVICES::Msj_t::Start, msj.get());
+            //std::thread thread2(&DEVICES::Msj_t::Start, msj.get());
             //Esperar a que todos los hilos terminen
                                          
             //std::thread thread1([mrf = std::move(mrf)]() {});            
             //thread1.join();
-            thread2.join();            
+            //thread2.join();            
             
-            ip->GetHostname(MRF24J40::msj_txt);
+            //ip->GetHostname(MRF24J40::msj_txt);
             while(true)
             
             {                                
-                flag= mrf->Run();     
+                flag= zigbee->Run();     
                 #ifdef USE_MRF24_RX
                 if(flag==true){                                                        
 
