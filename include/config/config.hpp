@@ -29,9 +29,9 @@
 
 #ifdef USE_MAC_ADDRESS_SHORT
     //#define MSJ "ABCDEFGHIJKLMKNOFGHIJKLMKNOPQRS@ABCDEFGHIJKLMKNOPQRS@ABCDEFGHIJKLMKNOPQRS" 
-    #define MSJ "ABCDEFGHIJKLMKNOFGHIJKLMKNOPQRSTUVWXYZ0MNO_____________"
+    #define MSJ "@ABCDEFGHIJKLMKNOPQRSTUVWXYZ"
 #else 
-    #define MSJ "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmno_____________"
+    #define MSJ "@ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmno_____________@"
     //#define MSJ "ABCDEFGHIJKLMKNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456@ABCDEFGHIJKLMKNOPQRS@ABCDEFGHIJKLMKNOPQ" 
 #endif
 
@@ -58,12 +58,11 @@
 #define LOG_FILENAME "log_mrf_"
 
 // Prints Debugger
-
 //#define DBG
 //#define DBG_BUFFER
 //#define DBG_FILES //imprime Debugger en files
 //#define DBG_DISPLAY_OLED
-#define DBG_MRF
+//#define DBG_MRF
 //#define DBG_RADIO
 //#define ENABLE_PRINTS_DBG
 //#define DBG_PRINT_GET_INFO
