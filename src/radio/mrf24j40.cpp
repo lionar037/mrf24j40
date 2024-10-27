@@ -57,7 +57,7 @@ namespace MRF24J40{
         // envia 16 , los mas significativos en 0x00 , los menos significativos envia el comando
         const uint8_t ret = prt_spi->Transfer2bytes(tmp); 
         #ifdef DBG_MRF
-            std::printf("mrf : read short \n");
+            //std::printf("mrf : read short \n");
         #endif
         return ret;
     }
