@@ -39,7 +39,7 @@ namespace GPIO {
 #endif
 
 
-constexpr int READING_STEPS = 2;
+constexpr int READING_STEPS = 1;
 
 const std::string SYSFS_GPIO_PATH = "/sys/class/gpio";
 const std::string SYSFS_GPIO_EXPORT_FN = "/export";
