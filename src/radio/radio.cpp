@@ -166,7 +166,7 @@ void Radio_t::handle_rx() {
     //files = POSITIOM_INIT_PRINTS;
 
     std::printf("received a packet ... ");    //std::cout << " \nreceived a packet ... ";
-    sprintf(bufferMonitor,"0x%x\n",mrf24j40_spi.get_rxinfo()->frame_length);
+    sprintf(bufferMonitor.data(),"0x%x\n",mrf24j40_spi.get_rxinfo()->frame_length);
     std::printf(bufferMonitor.data());//    std::cout << " bytes long " ;
     
     if(mrf24j40_spi.get_bufferPHY()){
