@@ -424,17 +424,17 @@ void Mrf24j_t::settings_mrf(void){
 
 
     void Mrf24j_t::pinMode(int i, bool b){
-    return;
+    //return;
     }
 
     void Mrf24j_t::digitalWrite(int i, bool b){
-    return;
+    //return;
     }
 
     void Mrf24j_t::delay(const uint16_t t){
-        TYME::Time_t time ;
-        time.delay_ms(t);
-    return;
+        //TYME::Time_t time ;
+        TYME::delay_ms(t);
+    //return;
     }
 
     void Mrf24j_t::interrupts(){
