@@ -163,11 +163,11 @@ void Radio_t::handle_rx() {
 
     //auto  monitor{std::make_unique <FFLUSH::Fflush_t>()};
 
-    files=POSITIOM_INIT_PRINTS;
+    //files = POSITIOM_INIT_PRINTS;
 
     std::printf("received a packet ... ");    //std::cout << " \nreceived a packet ... ";
     sprintf(bufferMonitor,"0x%x\n",mrf24j40_spi.get_rxinfo()->frame_length);
-    std::printf(bufferMonitor);//    std::cout << " bytes long " ;
+    std::printf(bufferMonitor.data());//    std::cout << " bytes long " ;
     
     if(mrf24j40_spi.get_bufferPHY()){
         std::printf(" Packet data (PHY Payload) :");//  std::cout << " Packet data (PHY Payload) :";
@@ -185,7 +185,7 @@ void Radio_t::handle_rx() {
         std::printf("\tdata_length : " + std::to_string(recevive_data_length) );        
         std::printf("\n");        
         std::printf(reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data ));
-        
+
         for (auto& byte : mrf24j40_spi.get_rxinfo()->rx_data)std::cout<<byte;        
         std::cout<<"\n";;
 
