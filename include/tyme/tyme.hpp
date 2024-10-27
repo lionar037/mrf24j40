@@ -19,6 +19,7 @@
 #include <cstring>
 #include <string_view>
 #include <chrono>
+#include <cstdint>
 
 namespace TYME{
 
@@ -35,10 +36,10 @@ namespace TYME{
     };
 
 
-    void delay      ( int );
-    void delay_ms   ( int );
-    void delay_us   ( int );
-    void delay_sec   ( int );
+    void delay      ( uint16_t );
+    void delay_ms   ( uint16_t );
+    void delay_us   ( uint16_t );
+    void delay_sec   ( uint16_t );
 
 
 }//end time
