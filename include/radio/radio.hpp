@@ -26,9 +26,9 @@
     #define MACADDR16
 #endif
 
-namespace DATA{
-    struct packet_tx;
-}
+//namespace DATA{
+//    struct packet_tx;
+//}
 
 namespace MRF24J40{
 
