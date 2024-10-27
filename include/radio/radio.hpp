@@ -53,7 +53,7 @@ namespace MRF24J40{
         #ifdef ENABLE_INTERRUPT_MRF24 // rx
             struct DATA::packet_rx             buffer_receiver{};        
         #endif             
-        struct DATA::packet_tx                  buffer_transmiter{};
+            struct DATA::packet_tx                  buffer_transmiter{};
         std::unique_ptr <GPIO::Gpio_t> gpio{};    
     };
 
