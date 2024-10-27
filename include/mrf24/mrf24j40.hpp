@@ -6,6 +6,10 @@
     #include <memory>
     #include <cstring>
 
+namespace TYME{
+    struct tyme_t;
+}
+
 namespace DATA{
         struct packet_tx;
     }
