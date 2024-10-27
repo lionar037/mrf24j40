@@ -28,8 +28,8 @@ void Run_t::start()
             //std::thread thread2(&DEVICES::Msj_t::Start, msj.get());
             //Esperar a que todos los hilos terminen
                                          
-            std::thread thread1([zigbee = std::move(zigbee)]() {});            
-            thread1.join();
+            //std::thread thread1([zigbee = std::move(zigbee)]() {});            
+            //thread1.join();
             //thread2.join();                        
             //ip->GetHostname(MRF24J40::msj_txt);
             while(true)            
