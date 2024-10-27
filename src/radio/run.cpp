@@ -32,7 +32,10 @@ void Run_t::start()
             //thread2.join();                        
         #ifdef USE_MRF24_RX
             while(true)        
-        #endif    
+        #endif  
+        #ifdef USE_MRF24_TX
+        flag = zigbee->Run();
+        #endif  
             {                                
                 flag = zigbee->Run();     
                 #ifdef USE_MRF24_RX
