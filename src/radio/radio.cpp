@@ -1,6 +1,6 @@
 #include <radio/radio.hpp>
 #include <mrf24/mrf24j40.hpp>
-#include <mrf24/mrf24j40_template.tpp>
+//#include <mrf24/mrf24j40_template.tpp>
 //#include <others/include/rfflush.h>
 #include <string_view>
 
