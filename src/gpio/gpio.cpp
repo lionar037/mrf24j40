@@ -133,7 +133,7 @@ namespace GPIO {
     }
 
     void Gpio_t::CloseGpios() {
-        if (filenameGpio.is_open()) filenameGpio.close();
+        if (m_filenameGpio.is_open()) m_filenameGpio.close();
         if (m_gpio_in_fd != -1) {close(m_gpio_in_fd);}
         gpio_set_value(m_gpio_out, VALUE_LOW);
         gpio_unexport(m_gpio_out);
@@ -193,11 +193,11 @@ namespace GPIO {
         #ifdef DBG_GPIO
             std::cout << "Gpio_t::updateGpioMaps()" << std::endl;
         #endif
-        gpioById.clear();
-        gpioByPin.clear();
+        m_gpioById.clear();
+        m_gpioByPin.clear();
         for (const auto& gpioPtr : m_gpio_cfg) {  // Cambiamos a gpioPtr
-            gpioById[gpioPtr->ID] = gpioPtr.get();  // Cambiar a ->
-            gpioByPin[gpioPtr->gpio] = gpioPtr.get();  // Cambiar a ->
+            m_gpioById[gpioPtr->ID] = gpioPtr.get();  // Cambiar a ->
+            m_gpioByPin[gpioPtr->gpio] = gpioPtr.get();  // Cambiar a ->
         }
     }
 
@@ -221,8 +221,8 @@ namespace GPIO {
         int id = getNextId();
         auto gpio = std::make_unique<GpioConform_t>(id, gpio_pin, std::move(dir), std::move(edge), std::move(value), true);
         m_gpio_cfg.push_back(std::move(gpio)); // Usa std::move aquí
-        gpioById[id] = m_gpio_cfg.back().get(); // Almacena el puntero a la última entrada
-        gpioByPin[gpio_pin] = m_gpio_cfg.back().get(); // Almacena el puntero a la última entrada
+        m_gpioById[id] = m_gpio_cfg.back().get(); // Almacena el puntero a la última entrada
+        m_gpioByPin[gpio_pin] = m_gpio_cfg.back().get(); // Almacena el puntero a la última entrada
     }
 
 
@@ -239,8 +239,8 @@ namespace GPIO {
             printf("const bool Gpio_t::app()...%d\r\n",m_res);   
         #endif         
 
-        settings( m_gpio_in  , DIR_IN  ,filenameGpio);
-        settings( m_gpio_out , DIR_OUT ,filenameGpio);
+        settings( m_gpio_in  , DIR_IN  ,m_filenameGpio);
+        settings( m_gpio_out , DIR_OUT ,m_filenameGpio);
         
         gpio_set_edge (m_gpio_in,EDGE_FALLING);
         gpio_set_value(m_gpio_out,VALUE_HIGH);

@@ -43,7 +43,6 @@
     #define MRF24_TRANSMITER_ENABLE
     //#define MRF24_RECEIVER_ENABLE
     #define ENABLE_INTERRUPT_MRF24
-//#endif    
 #elif  defined(MODULE_IS_RX)
     #define ADDRESS_LONG            0x1122334455667701
     #define ADDRESS_LONG_SLAVE      0x1122334455667702
@@ -74,7 +73,7 @@
 //config QR string 
 //Linea de configuracion para codigo Qr de una red wifi
 //#define QR_CODE_SRT "WIFI:T:WPA;S:MiRedWiFi;P:MiContraseña123;;";
-#define QR_CODE_SRT MSJ   
+//#define QR_CODE_SRT MSJ   
 
 #ifdef ENABLE_MOSQUITTO
     //#define HOST_SERVER_MOSQUITTO "mosquitto.local"
@@ -83,7 +82,7 @@
     //#define HOST_SERVER_MOSQUITTO "rpi2w.local"
 #endif
 
-#define QR_START
+//#define QR_START
 
 #ifdef QR_START
     #define ENABLE_QR    
@@ -93,12 +92,11 @@
 //habilita la encriptacion de mensajes 
     //#define ENABLE_SECURITY 
 #endif
+
 #ifdef USE_MRF24_RX
-    //#if defined(__LP64__) || defined(_LP64) || defined(__LLP64__) 
     #if (defined(__SIZEOF_POINTER__) && (__SIZEOF_POINTER__ == 4))//es de 32 bits?
         //#define USE_OLED2
+    #else
+        //#define USE_OLED
     #endif    
-    //#define USE_OLED
-#else
-
 #endif

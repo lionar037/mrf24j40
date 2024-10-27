@@ -102,20 +102,17 @@ constexpr int POLL_TIMEOUT = 10 * 1000;
         void        addGpio(uint16_t gpio_pin, std::string dir, std::string edge, std::string value);
        
     private:
-        bool        m_state;
-        int         m_gpio_in_fd;
-        const unsigned int m_gpio_out = OUT_INTERRUPT;
-        const int   m_gpio_in = IN_INTERRUPT;
-        std::ifstream filenameGpio;
-        
-        std::unordered_map<int, GpioConform_t*> gpioById;
-        std::unordered_map<uint16_t, GpioConform_t*> gpioByPin;
-
-        std::vector<std::unique_ptr<GpioConform_t>> m_gpio_cfg;
-
+        bool                    m_state;
+        int                     m_gpio_in_fd;
+        const unsigned int      m_gpio_out = OUT_INTERRUPT;
+        const int               m_gpio_in = IN_INTERRUPT;
+        std::ifstream           m_filenameGpio;        
+        std::unordered_map<int, GpioConform_t*>         m_gpioById;
+        std::unordered_map<uint16_t, GpioConform_t*>    m_gpioByPin;
+        std::vector<std::unique_ptr<GpioConform_t>>     m_gpio_cfg;
         void updateGpioMaps();
-        static inline int static_file_open_and_write_value{0};
-        int m_res{};
+        static inline int       m_static_file_open_and_write_value{0};
+        int                     m_res{};
     };
 
 }
