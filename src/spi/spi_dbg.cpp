@@ -1,6 +1,6 @@
 
-#include <spi/spi.h>
-#include <config/config.h>
+#include <spi/spi.hpp>
+#include <config/config.hpp>
 
 namespace SPI{
 
