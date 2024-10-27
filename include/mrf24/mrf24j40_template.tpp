@@ -3,7 +3,7 @@
 #include <mrf24/mrf24j40.hpp>
 #include <mrf24/mrf24j40_cmd.hpp>
 #include <mrf24/mrf24j40_settings.hpp>
-#include <app/config.hpp>
+#include <config/config.hpp>
 
 #include <iostream>
 
