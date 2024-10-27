@@ -30,8 +30,9 @@ void Run_t::start()
             //std::thread thread1([zigbee = std::move(zigbee)]() {});            
             //thread1.join();
             //thread2.join();                        
-            //ip->GetHostname(MRF24J40::msj_txt);
-            while(true)            
+        #ifdef USE_MRF24_RX
+            while(true)        
+        #endif    
             {                                
                 flag = zigbee->Run();     
                 #ifdef USE_MRF24_RX
