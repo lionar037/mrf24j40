@@ -36,7 +36,7 @@ void Run_t::start()
             
             ip->GetHostname(MRF24J40::msj_txt);
             while(true)
-            #endif
+            
             {                                
                 flag= mrf->Run();     
                 #ifdef USE_MRF24_RX
