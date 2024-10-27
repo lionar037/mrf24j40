@@ -1,9 +1,8 @@
 
 #include <spi/spi.hpp>
 #include <config/config.hpp>
-
+#include <iostream>
 namespace SPI{
-
     void Spi_t::msj_fail(){
             #ifdef DBG_SPI
                 printf("Could not open the Spi device...\r\n");
