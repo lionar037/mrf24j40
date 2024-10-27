@@ -146,14 +146,13 @@ std::string msj_txt = {"MRF24J40 RX"};
     }
 
 void Radio_t::handle_rx() {
-
     #ifdef MRF24_RECEIVER_ENABLE
     std::vector<char>bufferMonitor(256);
 
     std::printf("received a packet ... ");    //std::cout << " \nreceived a packet ... ";
     //sprintf(bufferMonitor.data(),"0x%x\n",mrf24j40_spi->get_rxinfo()->frame_length);
     
-    std::memcpy(bufferMonitor.data() , get_rxbuf() , mrf24j40_spi->get_rxinfo()->frame_length);
+    std::memcpy(bufferMonitor.data() , mrf24j40_spi->get_rxbuf() , mrf24j40_spi->get_rxinfo()->frame_length);
 
     std::cout<< "tamaño del paquete : " << std::to_string(bufferMonitor.size())<<"\n";
     std::printf(bufferMonitor.data());//    std::cout << " bytes long " ;
