@@ -26,7 +26,7 @@ namespace TYME{
     {
             explicit Time_t();
             ~Time_t();
-            void delay_ms(const uint32_t);
+            void delay_ms(const uint16_t);
             const std::string get_tyme();
             bool getHourNTP(const std::string_view& , std::chrono::system_clock::time_point& ) ;
             int timeUpdate() ;
