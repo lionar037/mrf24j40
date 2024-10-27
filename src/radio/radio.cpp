@@ -114,9 +114,7 @@ void Radio_t::Start(bool& flag) {
                 std::cout<<"\n";
             #endif
         }
-        #endif
-    #endif
-    
+        #endif    
     }
 }
 
