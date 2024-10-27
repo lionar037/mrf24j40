@@ -1,7 +1,5 @@
-//#include <chrono>
 #include <config/config.hpp>
 #include <tyme/tyme.hpp>
-//#include <unistd.h> // Libreria para usleep
 #include <thread>
 #include <iomanip>
 #include <sstream>
@@ -17,6 +15,12 @@
 
 
 namespace TYME{
+
+    void delay_ms(const int64_t t){
+        std::chrono::microseconds delay_loc(t);
+        std::this_thread::sleep_for(delay_loc);
+    return;
+    }
 
     Time_t::Time_t(){
         #ifdef DBG
