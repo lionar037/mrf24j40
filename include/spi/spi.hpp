@@ -24,10 +24,10 @@
 #define     LARGE_SECTOR_SIZE   256 // Tamaño de un sector grande (puede ser modificado)
 
 namespace SPI{
-  struct  Spi{
+  struct  Spi_t{
     //[[nodiscard]] 
-    explicit Spi();
-      ~Spi();
+    explicit Spi_t();
+      ~Spi_t();
 
     void init();
     void settings_spi();

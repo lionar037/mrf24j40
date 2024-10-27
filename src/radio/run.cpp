@@ -14,14 +14,9 @@ namespace MRF24J40{
     extern std::string msj_txt;
 }
 
-namespace QR{
-    #ifdef USE_OLED
-    extern QR_OLED_BUFF codeQrGlobal;
-    #endif
-}
 
 namespace RUN{
-    extern MRF24J40::Mrf24j mrf24j40_spi ;    
+    extern MRF24J40::Mrf24j_t mrf24j40_spi ;    
     
 void Run_t::start()
 {
@@ -31,14 +26,8 @@ void Run_t::start()
     try{
             auto mrf { std::make_unique<MRF24J40::Radio_t>()};        // Inicializar hilos y ejecutar las clases en paralelo
                  
-            #ifdef USE_OLED                 
-                static auto oled { std::make_unique<OLED::Oled_t>() };    //inicializar una sola vez 
-            #endif          
 
             std::thread thread2(&DEVICES::Msj_t::Start, msj.get());
-            #ifdef USE_OLED            
-            std::thread thread3(&OLED::Oled_t::init , oled.get());
-            #endif            
             //Esperar a que todos los hilos terminen
                                          
             //std::thread thread1([mrf = std::move(mrf)]() {});            
@@ -46,24 +35,13 @@ void Run_t::start()
             thread2.join();            
             
             ip->GetHostname(MRF24J40::msj_txt);
-            #ifdef USE_MRF24_RX
-            #ifdef USE_OLED  
-                thread3.join(); 
-            #endif
-            #ifdef USE_OLED                                                       
-                oled->create(MRF24J40::msj_txt.c_str());
-            #endif
             while(true)
             #endif
             {                                
                 flag= mrf->Run();     
                 #ifdef USE_MRF24_RX
                 if(flag==true){                                                        
-                    #ifdef USE_OLED
-                        const auto x = QR::codeQrGlobal.height;
-                        const auto y = QR::codeQrGlobal.width;                                            
-                        oled->Graphics(x,y,QR::codeQrGlobal.data,QR::codeQrGlobal.bufferComplete);
-                    #endif
+
                 }
                 #endif                                
             }

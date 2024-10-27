@@ -1,47 +1,26 @@
-#include <app/radio.hpp>
+#include <radio/radio.hpp>
 #include <mrf24/mrf24j40.hpp>
 #include <mrf24/include/mrf24j40_template.tpp>
 //#include <others/include/rfflush.h>
 #include <string_view>
 
-
-
 namespace MRF24J40{ 
 
-Mrf24j mrf24j40_spi ;
+Mrf24j_t mrf24j40_spi ;
 
 std::string msj_txt="MRF24J40 RX";
-std::unique_ptr< MOSQUITTO::Mosquitto_t > Radio_t::mosq = nullptr;
 
-
-#ifdef USE_MRF24_TX
-    std::unique_ptr< SECURITY::Security_t > Radio_t::security = nullptr;
-#endif
 
 Radio_t::Radio_t() 
 #ifdef ENABLE_INTERRUPT_MRF24
 :   m_status          (true)
-//,   fs              { std::make_unique<FILESYSTEM::File_t>() }
-    #ifdef ENABLE_DATABASE
-,   database        { std::make_unique<DATABASE::Database_t>() }
-    #endif
 #else
 :   m_status          (false)
-#ifdef ENABLE_QR
-,   qr              { std::make_unique<QR::Qr_t>() }
-#endif
 #endif
 ,   gpio            { std::make_unique<GPIO::Gpio_t>(m_status) }
-{
-    
-    #ifdef ENABLE_INTERRUPT_MRF24
-    
-    #else            
-            security    =   std::make_unique<SECURITY::Security_t >();
-    #endif
-          
+{              
     #ifdef DBG
-    std::cout << "Size msj : ( "<<std::dec<<sizeof(MSJ)<<" )\n";
+        std::cout << "Size msj : ( "<<std::dec<<sizeof(MSJ)<<" )\n";
     #endif
 
     mrf24j40_spi.init();
@@ -71,19 +50,12 @@ Radio_t::Radio_t()
 
     //Single send cmd
     //mrf24j40_spi.Transfer3bytes(0xE0C1);
-    
-    mosq  =  std::make_unique<MOSQUITTO::Mosquitto_t>();
-    
+        
     m_flag=true;
-
 }
 
-    bool Radio_t::Run(void){
-        //std::cout << "\033[2J\033[H" << std::flush;
-        //system("clear");
-                
-        gpio->app(m_flag);                              
-              
+    bool Radio_t::Run(void){         
+        gpio->app(m_flag);                                            
         Start(m_flag);                
         interrupt_routine() ;  
         return m_flag; 
@@ -94,17 +66,10 @@ Radio_t::Radio_t()
 void Radio_t::Start(bool& flag) {
 
     flag = mrf24j40_spi.check_flags(&handle_rx, &handle_tx);
-    const unsigned long current_time = 1000000;//1000000 original
+    const unsigned long current_time = 1000000;
     if (current_time - m_last_time > m_tx_interval) {
         m_last_time = current_time;
     #ifdef MRF24_TRANSMITER_ENABLE   
-            #ifdef ENABLE_SECURITY 
-             if( security->init() != SUCCESS_PASS){
-                std::cout<<"Exit tx\n";
-                return ; 
-                }
-                else{ std::cout<<"Success tx\n"; }
-            #endif
         #ifdef DBG
             #ifdef MACADDR64
                 std::cout<<"send msj 64() ... \n";
@@ -144,8 +109,10 @@ void Radio_t::Start(bool& flag) {
           } 
           if (status==1)  {//0 = Succeeded
               std::cout<<"\tTX ACK Ok   \n";
-            //  std::cout<<" retries : "<<std::to_string(mrf24j40_spi.get_txinfo()->retries);
-            //  std::cout<<"\n";
+            s#ifdef DBG_RADIO
+                std::cout<<" retries : "<<std::to_string(mrf24j40_spi.get_txinfo()->retries);
+                std::cout<<"\n";
+            #endif
         }
         #endif
     #endif
@@ -160,11 +127,6 @@ void Radio_t::Start(bool& flag) {
     void update(std::string_view str_view)
     {    
         const int positionAdvance{15};
-        auto            fs          { std::make_unique<FILESYSTEM::File_t> () };
-        #ifdef ENABLE_QR
-        auto            qr_img      { std::make_unique<QR::Qr_img_t>() };
-        #endif
-        auto            monitor     { std::make_unique <FFLUSH::Fflush_t>()};
 
         const auto*     packet_data = reinterpret_cast<const char*>(str_view.data());
 
@@ -173,12 +135,8 @@ void Radio_t::Start(bool& flag) {
 
         SET_COLOR(SET_COLOR_GRAY_TEXT);
 
-        fs->create(packet_data);
         std::cout<<"\n";
-        #ifdef ENABLE_QR
-            qr_img->create(packet_data);
-            //qr_img->print();
-        #endif
+
 
     return ;    
     }
@@ -194,15 +152,6 @@ void Radio_t::handle_tx() {
             std::cout<<" \n";
          }
     return;
-   
-		// if(RadioStatus.TX_PENDING_ACK)									// if we were waiting for an ACK
-		// {
-			// uint8_t TXSTAT = lowRead(READ_TXSR); //#define READ_TXSR 0x48							// read TXSTAT, transmit status register
-			// RadioStatus.TX_FAIL    = TXSTAT & 1;						// read TXNSTAT (TX failure status)
-			// RadioStatus.TX_RETRIES = TXSTAT >> 6;						// read TXNRETRY, number of retries of last sent packet (0..3)
-			// RadioStatus.TX_CCAFAIL = TXSTAT & 0b00100000;				// read CCAFAIL
-			// RadioStatus.TX_PENDING_ACK = 0;								// TX finished, clear that I am pending an ACK, already got it (if I was gonna get it)
-		// }
     }
 
  
@@ -218,66 +167,55 @@ void Radio_t::handle_rx() {
 
     files=POSITIOM_INIT_PRINTS;
 
-    monitor->print("received a packet ... ",files++,col);    //std::cout << " \nreceived a packet ... ";
+    std::printf("received a packet ... ");    //std::cout << " \nreceived a packet ... ";
     sprintf(bufferMonitor,"0x%x\n",mrf24j40_spi.get_rxinfo()->frame_length);
-    monitor->print(bufferMonitor,files++,col);//    std::cout << " bytes long " ;
+    std::printf(bufferMonitor);//    std::cout << " bytes long " ;
     
     if(mrf24j40_spi.get_bufferPHY()){
-        monitor->print(" Packet data (PHY Payload) :",files++,col);//  std::cout << " Packet data (PHY Payload) :";
+        std::printf(" Packet data (PHY Payload) :");//  std::cout << " Packet data (PHY Payload) :";
       #ifdef DBG_PRINT_GET_INFO
       for (int i = 0; i < mrf24j40_spi.get_rxinfo()->frame_length; i++) 
       {        
-          //std::cout <<" "<<std::hex<< mrf24j40_spi.get_rxbuf()[i];//monitor->set(" Packet data (PHY Payload) :",files,col);
+          std::cout <<" "<<std::hex<< mrf24j40_spi.get_rxbuf()[i];//monitor->set(" Packet data (PHY Payload) :",files,col);
       }
       #endif
     }
-        //std::cout << "\n";
+        std::cout << "\n";
         
-        monitor->print("ASCII data (relevant data) :",files++,col); //std::cout<<"\r\nASCII data (relevant data) :\n";
+        std::printf("ASCII data (relevant data) :"); //std::cout<<"\r\nASCII data (relevant data) :\n";
         const auto recevive_data_length = mrf24j40_spi.rx_datalength();
-        monitor->print("\tdata_length : " + std::to_string(recevive_data_length) ,files,col+36);        
-        monitor->print("\n",files++,col);
-        
-        monitor->print(reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data ),files++,col);
-        //for (auto& byte : mrf24j40_spi.get_rxinfo()->rx_data)std::cout<<byte;
-        
-        monitor->print("\n",files++,col);
+        std::printf("\tdata_length : " + std::to_string(recevive_data_length) );        
+        std::printf("\n");        
+        std::printf(reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data ));
+        //for (auto& byte : mrf24j40_spi.get_rxinfo()->rx_data)std::cout<<byte;        
+        //monitor->print("\n",files++,col);
 
     #ifdef DBG_PRINT_GET_INFO 
       
         if(ADDRESS_LONG_SLAVE == add){
-            monitor->print("\nmac es igual\n" ,files++,col);
+            std::printf("\nmac es igual\n" );
         }
         else{
-            monitor->print("\nmac no es igual\n",files++ ,col) ;
+            std::printf("\nmac no es igual\n") ;
         }
-        monitor->print("\ndata_receiver->mac : " + std::to_string (add )+ "\n",files++ ,col);
-        monitor->print("buffer_receiver->head : " + packet_data_tmp->head + "n",files++ ,col);
+        std::printf("\ndata_receiver->mac : " + std::to_string (add )+ "\n");
+        std::printf("buffer_receiver->head : " + packet_data_tmp->head + "n");
         auto bs = (~packet_data_tmp->size)&0xffff;
-        monitor->print("buffer_receiver->size : " + reinterpret_cast<const int *>(bs) + "\n" ,files++,col);
-        monitor->print("data_receiver->data : " + reinterpret_cast<const char *>(packet_data_tmp->data) + "\n" ,files++,col);
-        monitor->print("\nbuff: \n" + buff ,files++,col);
-        monitor->print("\r\n" ,files++,col);
+        std::printf("buffer_receiver->size : " + reinterpret_cast<const int *>(bs) + "\n" );
+        std::printf("data_receiver->data : " + reinterpret_cast<const char *>(packet_data_tmp->data) + "\n" );
+        std::printf("\nbuff: \n" + buff );
+        std::printf("\r\n" );
     #endif            
-        monitor->print("LQI : " + std::to_string(mrf24j40_spi.get_rxinfo()->lqi) ,files++,col);
-        monitor->print("RSSI : " + std::to_string(mrf24j40_spi.get_rxinfo()->rssi) ,files++,col);  //std::cout<<"\r\n";
+        std::printf("LQI : " + std::to_string(mrf24j40_spi.get_rxinfo()->lqi)   );
+        std::printf("RSSI : " + std::to_string(mrf24j40_spi.get_rxinfo()->rssi) );
     #endif
         
         
-        const int temperature = mosq->pub();
-
-        const std::string temperatureToString=  "{ temp :" + std::to_string(temperature)+ " }";
-
         update(reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data) ); //update(tempString.data());
         
+        std::printf(temperatureToString.data());
         
-        //std::cout<<temperatureToString.data(); 
-        monitor->print(temperatureToString.data(),files++,col+36);
-        
-        msj_txt=reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data) ;
-        
-        monitor->maxLines(files);
-        monitor->view();
+        msj_txt = reinterpret_cast<const char*>(mrf24j40_spi.get_rxinfo()->rx_data) ;        
                 
         return;    
     }

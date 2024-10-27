@@ -20,8 +20,8 @@ namespace SPI{
             std::cout << " spi.len  : "<< std::dec<<spi->len <<"\n";
             std::cout << " spi.delay_usecs  : "<< std::dec<<spi->delay_usecs <<"\n";
             std::cout << " spi.speed_hz  : "<< std::dec<<spi->speed_hz <<"\n";
-            printf("spi.bits_per_word :%d \n", spi->bits_per_word);
-            printf("spi.cs_change :%d \n", spi->cs_change);
+            std::printf("spi.bits_per_word :%d \n", spi->bits_per_word);
+            std::printf("spi.cs_change :%d \n", spi->cs_change);
             std::cout << " spi.bits_per_word  : "<< std::dec<< spi->bits_per_word <<"\n";
             std::cout << " spi.cs_change : "<< std::dec<< spi->cs_change <<"\n";
         #endif

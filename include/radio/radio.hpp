@@ -17,23 +17,13 @@
 #include <iomanip>
 #include <functional>
 
+#define POSITIOM_INIT_PRINTS 4
+
 #ifdef USE_MAC_ADDRESS_LONG 
     #define MACADDR64
 #elif defined (USE_MAC_ADDRESS_SHORT)
     #define MACADDR16
 #endif
-
-#ifdef USE_OLED
-    namespace OLED{
-        struct Oled_t;
-    }
-#endif
-
-#define POSITIOM_INIT_PRINTS 4
-
-    namespace MOSQUITTO{
-        struct Mosquitto_t;
-    }
 
 
 namespace MRF24J40{
@@ -61,18 +51,10 @@ namespace MRF24J40{
                                             
             
         #ifdef ENABLE_INTERRUPT_MRF24 // rx
-            std::unique_ptr<DATABASE::Database_t>   database{};
-            //std::unique_ptr<WORK::Work_t>           fs{};
-            struct DATA::packet_rx                  buffer_receiver{};
-        #else   //IS_TX
-            #ifdef ENABLE_QR 
-                std::unique_ptr<WORK::Work_t> qr{};                    
-            #endif
+            struct DATA::packet_rx             buffer_receiver{};        
         #endif             
         struct DATA::packet_tx                  buffer_transmiter{};
         std::unique_ptr <GPIO::Gpio_t> gpio{};    
-        static std::unique_ptr < SECURITY::Security_t >     security;
-        static std::unique_ptr < MOSQUITTO::Mosquitto_t >   mosq;                    
     };
 
 

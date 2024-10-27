@@ -14,13 +14,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#include <mrf24/mrf24j40.hpp>
 #include <mrf24/mrf24j40_cmd.hpp>
 #include <mrf24/mrf24j40_settings.hpp>
 #include <mrf24/mrf24j40_control_register.hpp>
+#include <spi/spi.hpp>
 #include <tyme/tyme.hpp>
 #include <config/config.hpp>
-#include <mrf24/mrf24j40.hpp>
-#include <spi/spi.hpp>
+
 #include <string_view>
 #include <iomanip>
 #include <type_traits>
@@ -40,8 +41,8 @@ namespace MRF24J40{
     static tx_info_t tx_info{};
     static RXMCR rxmcr{0x00};
 
-    Mrf24j::Mrf24j()
-    : prt_spi {std::make_unique<SPI::Spi>()} , 
+    Mrf24j_t::Mrf24j_t()
+    : prt_spi {std::make_unique<SPI::Spi_t>()} , 
     m_bytes_nodata { m_bytes_MHR + m_bytes_FCS}
     {
         #ifdef DBG
@@ -49,7 +50,7 @@ namespace MRF24J40{
         #endif
     }
 
-    const uint8_t Mrf24j::read_short(const uint8_t address) {
+    const uint8_t Mrf24j_t::read_short(const uint8_t address) {
         // 0 top for short addressing, 0 bottom for read
         const uint8_t tmp = (address<<1 & 0b01111110);
 
@@ -61,14 +62,14 @@ namespace MRF24J40{
         return ret;
     }
 
-    void Mrf24j::write_short(const uint8_t address,const uint8_t data) {
+    void Mrf24j_t::write_short(const uint8_t address,const uint8_t data) {
         // 0 for top short address, 1 bottom for write
         const uint16_t lsb_tmp = ( (address<<1 & 0b01111110) | 0x01 ) | (data<<8);
         prt_spi->Transfer2bytes(lsb_tmp);
         return;
     }
 
-    const uint8_t Mrf24j::read_long(const uint16_t address) {
+    const uint8_t Mrf24j_t::read_long(const uint16_t address) {
 
         const uint8_t lsb_address = (address >> 3 )& 0x7F;//0x7f
         const uint8_t msb_address = (address << 5) & 0xE0;//0xe0
@@ -79,7 +80,7 @@ namespace MRF24J40{
     return ret;
     }
 
-    void Mrf24j::write_long(const uint16_t address,const uint8_t data) {
+    void Mrf24j_t::write_long(const uint16_t address,const uint8_t data) {
         const uint8_t lsb_address = (address >> 3) & 0x7F;
         const uint8_t msb_address = (address << 5) & 0xE0;
         const uint32_t comp = ( (0x80 | lsb_address) | ( (msb_address | 0x10) << 8 ) | (data<<16) ) & 0xffffff;
@@ -87,7 +88,7 @@ namespace MRF24J40{
         return;
     }
 
-    uint16_t Mrf24j::get_pan(void) {
+    uint16_t Mrf24j_t::get_pan(void) {
         const uint8_t panh = read_short(MRF_PANIDH);
         const uint8_t panl =read_short(MRF_PANIDL);
 
@@ -100,17 +101,17 @@ namespace MRF24J40{
         return (panh << 8 | panl);
     }
 
-    void Mrf24j::set_pan(const uint16_t panid) {
+    void Mrf24j_t::set_pan(const uint16_t panid) {
         write_short(MRF_PANIDH, (panid >> 8)& 0xff);
         write_short(MRF_PANIDL, panid & 0xff);
     }
 
-    void Mrf24j::address16_write(const uint16_t address16) {
+    void Mrf24j_t::address16_write(const uint16_t address16) {
         write_short(MRF_SADRH, (address16 >> 8)& 0xff);
         write_short(MRF_SADRL, address16 & 0xff);
     }
 
-    void Mrf24j::address64_write(const uint64_t addressLong){
+    void Mrf24j_t::address64_write(const uint64_t addressLong){
         write_short(MRF_EADR7,(addressLong>>56)&0xff);
         write_short(MRF_EADR6,(addressLong>>48)&0xff);
         write_short(MRF_EADR5,(addressLong>>40)&0xff);
@@ -122,7 +123,7 @@ namespace MRF24J40{
     return ;
     }
 
-    void Mrf24j::address_write(const uint64_t addressLong)
+    void Mrf24j_t::address_write(const uint64_t addressLong)
     {
 
         write_short(MRF_EADR1,(addressLong>>8 )&0xff);
@@ -139,13 +140,13 @@ namespace MRF24J40{
     return ;
     }
 
-    uint16_t Mrf24j::address16_read(void) {
+    uint16_t Mrf24j_t::address16_read(void) {
         const uint8_t a16h = read_short(MRF_SADRH);
         return (a16h << 8 | read_short(MRF_SADRL));
     }
 
 
-    uint64_t Mrf24j::address64_read(void){
+    uint64_t Mrf24j_t::address64_read(void){
         uint64_t address64 ;
 
         address64  = (read_short(MRF_EADR0));
@@ -165,7 +166,7 @@ namespace MRF24J40{
         * @param data
     */
 
-    void Mrf24j::set_interrupts(void) {
+    void Mrf24j_t::set_interrupts(void) {
             // interrupts for rx and tx normal complete
         #ifdef DBG_MRF
             std::printf("set interrupt \n");
@@ -175,16 +176,11 @@ namespace MRF24J40{
 
             /** use the 802.15.4 channel numbers..
             */
-    void Mrf24j::set_channel(const uint8_t channel) {
+    void Mrf24j_t::set_channel(const uint8_t channel) {
         write_long(MRF_RFCON0, (((channel - 11) << 4) | 0x03));
     }
 
-    void Mrf24j::init(void) {
-    // //Seems a bit ridiculous when I use reset pin anyway
-    // write_short(MRF_SOFTRST, 0x7); // from manual
-    // while (read_short(MRF_SOFTRST) & 0x7 != 0) {
-        // ; // wait for soft reset to finish
-    // }
+    void Mrf24j_t::init(void) {
 
         #ifdef MODULE_TX_RST
            #define ENABLE_RESET_MRF24
@@ -239,7 +235,7 @@ namespace MRF24J40{
      * Only the most recent data is ever kept.
      */
             
-    void Mrf24j::interrupt_handler(void) {
+    void Mrf24j_t::interrupt_handler(void) {
         const auto last_interrupt = read_short(MRF_INTSTAT);
         if(last_interrupt & MRF_I_RXIF) {
             m_flag_got_rx++;
@@ -260,10 +256,10 @@ namespace MRF24J40{
             // buffer data bytes
             int rd_ptr = 0;
             // from (0x301 + bytes_MHR) to (0x301 + frame_length - bytes_nodata - 1)
-#ifdef DBG_MRF
-             printf(" frame length : %d \n",frame_length);
-             printf(" rx datalength : %d \n",rx_datalength());
-#endif
+            #ifdef DBG_MRF
+                printf(" frame length : %d \n",frame_length);
+                printf(" rx datalength : %d \n",rx_datalength());
+            #endif
         for (uint16_t i = 0; i < frame_length ; i++) {
            // for (uint16_t i = 0; i < frame_length + rx_datalength(); i++) {//original
                 rx_info.rx_data[rd_ptr++] = read_long(0x301 + m_bytes_MHR + i);
@@ -292,7 +288,7 @@ namespace MRF24J40{
 
 
 
-    int Mrf24j::getStatusInfoTx(void){
+    int Mrf24j_t::getStatusInfoTx(void){
     [[gnu::unused]]    const auto& tx_status = read_short(MRF_TXSTAT);
     #ifdef DBG_MRF
         std::cout<<"\t\rRead MRF_TXSTAT : "<<std::to_string(tx_status)<<"\n";
@@ -302,7 +298,7 @@ namespace MRF24J40{
     /**
      * Call this function periodically, it will invoke your nominated handlers
      */
-    bool Mrf24j::check_flags(void (*rx_handler)(), void (*tx_handler)())    
+    bool Mrf24j_t::check_flags(void (*rx_handler)(), void (*tx_handler)())    
     {
             // TODO - we could check whether the flags are > 1 here, indicating data was lost?
         if (m_flag_got_rx) {
@@ -325,7 +321,7 @@ namespace MRF24J40{
     }
 
 
-    bool Mrf24j::check_ack(void (*tx_handler)())    
+    bool Mrf24j_t::check_ack(void (*tx_handler)())    
     {
     // TODO - we could check whether the flags are > 1 here, indicating data was lost?
         if (m_flag_got_tx) {
@@ -346,7 +342,7 @@ namespace MRF24J40{
     /**
      * Set RX mode to promiscuous, or normal
      */
-    void Mrf24j::set_promiscuous(bool enabled) {
+    void Mrf24j_t::set_promiscuous(bool enabled) {
         if (enabled) {
             write_short(MRF_RXMCR, 0x01);
         } else {
@@ -355,7 +351,7 @@ namespace MRF24J40{
     }
 
 
-void Mrf24j::settings_mrf(void){
+void Mrf24j_t::settings_mrf(void){
         rxmcr.PANCOORD=true;
         rxmcr.COORD=false;
         //rxmcr.PROMI=true;       //1 = Receive all packet types with good CRC
@@ -370,23 +366,23 @@ void Mrf24j::settings_mrf(void){
         return;
     }
 
-    rx_info_t * Mrf24j::get_rxinfo(void) {
+    rx_info_t * Mrf24j_t::get_rxinfo(void) {
         return &rx_info;
     }
 
-    tx_info_t * Mrf24j::get_txinfo(void) {
+    tx_info_t * Mrf24j_t::get_txinfo(void) {
         return &tx_info;
     }
 
-    uint8_t * Mrf24j::get_rxbuf(void) {
+    uint8_t * Mrf24j_t::get_rxbuf(void) {
         return rx_buf;
     }
 
-    int Mrf24j::rx_datalength(void) {
+    int Mrf24j_t::rx_datalength(void) {
         return rx_info.frame_length - m_bytes_nodata;
     }
 
-    void Mrf24j::set_ignoreBytes(int ib) {
+    void Mrf24j_t::set_ignoreBytes(int ib) {
         // some modules behaviour
         ignoreBytes = ib;
     }
@@ -394,19 +390,19 @@ void Mrf24j::settings_mrf(void){
     /**
      * Set bufPHY flag to buffer all bytes in PHY Payload, or not
      */
-    void Mrf24j::set_bufferPHY(bool bp) {
+    void Mrf24j_t::set_bufferPHY(bool bp) {
         bufPHY = bp;
     }
 
 
-    bool Mrf24j::get_bufferPHY(void) {
+    bool Mrf24j_t::get_bufferPHY(void) {
         return bufPHY;
     }
 
     /**
      * Set PA/LNA external control
      */
-    void Mrf24j::set_palna(bool enabled) {
+    void Mrf24j_t::set_palna(bool enabled) {
         if (enabled) {
             write_long(MRF_TESTMODE, 0x07); // Enable PA/LNA on MRF24J40MB module.
         }else{
@@ -414,48 +410,48 @@ void Mrf24j::settings_mrf(void){
         }
     }
 
-    void Mrf24j::rx_flush(void) {
+    void Mrf24j_t::rx_flush(void) {
         write_short(MRF_RXFLUSH, 0x01);
     }
 
-    void Mrf24j::rx_disable(void) {
+    void Mrf24j_t::rx_disable(void) {
         write_short(MRF_BBREG1, 0x04);  // RXDECINV - disable receiver
     }
 
-    void Mrf24j::rx_enable(void) {
+    void Mrf24j_t::rx_enable(void) {
         write_short(MRF_BBREG1, 0x00);  // RXDECINV - enable receiver
     }
 
 
-    void Mrf24j::pinMode(int i, bool b){
+    void Mrf24j_t::pinMode(int i, bool b){
     return;
     }
 
-    void Mrf24j::digitalWrite(int i, bool b){
+    void Mrf24j_t::digitalWrite(int i, bool b){
     return;
     }
 
-    void Mrf24j::delay(const uint16_t t){
+    void Mrf24j_t::delay(const uint16_t t){
         TYME::Time_t time ;
         time.delay_ms(t);
     return;
     }
 
-    void Mrf24j::interrupts(){
+    void Mrf24j_t::interrupts(){
         
     }
 
-    void Mrf24j::noInterrupts(){
+    void Mrf24j_t::noInterrupts(){
     }
 
-    Mrf24j::~Mrf24j( ){
+    Mrf24j_t::~Mrf24j_t( ){
         #ifdef DBG_MRF
             std::cout <<"~Mrf24j( )\r\n";
         #endif
     }
 
 
-    void Mrf24j::send(uint64_t dest, const std::string& pf) 
+    void Mrf24j_t::send(uint64_t dest, const std::string& pf) 
     {
         //const uint8_t len = strlen(data); // get the length of the char* array
         const auto len = pf.length();
@@ -527,7 +523,7 @@ void Mrf24j::settings_mrf(void){
         write_short(MRF_TXNCON, (1<<MRF_TXNACKREQ | 1<<MRF_TXNTRIG));
     }
 
-    void  Mrf24j::settingsSecurity(void){
+    void  Mrf24j_t::settingsSecurity(void){
         SECCR security;
         
         security.seccon0.SECIGNORE  =false;
@@ -552,7 +548,7 @@ void Mrf24j::settings_mrf(void){
 
 
 
-    void Mrf24j::RadioSetSleep(uint8_t powerState){
+    void Mrf24j_t::RadioSetSleep(uint8_t powerState){
         #ifdef ENABLE_SLEEP    
     	if (powerState)
     	{
