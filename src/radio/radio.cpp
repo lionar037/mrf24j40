@@ -8,7 +8,7 @@ namespace MRF24J40{
 
 Mrf24j_t mrf24j40_spi ;
 
-std::string msj_txt="MRF24J40 RX";
+std::string msj_txt = {"MRF24J40 RX"};
 
 
 Radio_t::Radio_t() 
