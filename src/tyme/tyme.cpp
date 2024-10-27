@@ -31,7 +31,7 @@ namespace TYME{
         #endif
     }
 
-    void Time_t::delay_ms(const uint16_t t){
+    void Time_t::delay_ms(const int64_t t){
         std::chrono::microseconds delay_loc(t);
         std::this_thread::sleep_for(delay_loc);
         //     usleep(t);//otra forma

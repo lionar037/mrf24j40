@@ -68,7 +68,7 @@ struct Mrf24j_t //: public SPI::Spi
 
         void                pinMode             (int,bool);
         void                digitalWrite        (int,bool);
-        void                delay               (const uint16_t);
+        void                delay               (const int64_t);
         void                interrupts          (void);
         void                noInterrupts        (void);
         
