@@ -153,7 +153,7 @@ void Radio_t::handle_rx() {
     sprintf(bufferMonitor.data(),"0x%x\n",mrf24j40_spi->get_rxinfo()->frame_length);
     std::printf(bufferMonitor.data());//    std::cout << " bytes long " ;
     
-    if(mrf24j40_spi.get_bufferPHY()){
+    if(mrf24j40_spi->get_bufferPHY()){
         std::printf(" Packet data (PHY Payload) :");//  std::cout << " Packet data (PHY Payload) :";
       #ifdef DBG_PRINT_GET_INFO
       for (int i = 0; i < mrf24j40_spi->get_rxinfo()->frame_length; i++) 
