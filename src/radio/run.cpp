@@ -20,7 +20,7 @@ namespace RUN{
 void Run_t::start()
 {
         [[gnu::unused]]  bool flag{true};
-        //system("clear"); 
+        system("clear"); 
     
     try{
             auto zigbee { std::make_unique<MRF24J40::Radio_t>()};        // Inicializar hilos y ejecutar las clases en paralelo                 
