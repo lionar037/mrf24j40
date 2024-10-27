@@ -7,10 +7,7 @@ namespace MRF24J40{
 
 //Mrf24j_t mrf24j40_spi ;
 std::unique_ptr<Mrf24j_t> mrf24j40_spi ;//= 
-
 std::string msj_txt = {"MRF24J40 RX"};
-
-
     Radio_t::Radio_t() 
     #ifdef ENABLE_INTERRUPT_MRF24
     :   m_status          (true)
@@ -23,13 +20,12 @@ std::string msj_txt = {"MRF24J40 RX"};
             std::cout << "Size msj : ( "<<std::dec<<sizeof(MSJ)<<" )\n";
         #endif
         mrf24j40_spi = std::make_unique<Mrf24j_t>();
-
         mrf24j40_spi->init();
         mrf24j40_spi->settingsSecurity();
         mrf24j40_spi->interrupt_handler();
         mrf24j40_spi->set_pan(PAN_ID);
-        // This is _our_ address
 
+        // This is _our_ address
         #ifdef MACADDR16
             mrf24j40_spi->address16_write(ADDRESS); 
         #elif defined (MACADDR64)

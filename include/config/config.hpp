@@ -8,8 +8,10 @@
     #define USE_MRF24_TX
 #endif
 
-//#define USE_MAC_ADDRESS_LONG
-#define USE_MAC_ADDRESS_SHORT
+#define USE_MAC_ADDRESS_LONG
+//#define USE_MAC_ADDRESS_SHORT
+
+#define USE_MSJ_SHORT
 
 //Enable database 
 //#define ENABLE_DATABASE
@@ -27,7 +29,7 @@
     #define MODULE_RX_RST
 #endif
 
-#ifdef USE_MAC_ADDRESS_SHORT
+#ifdef USE_MSJ_SHORT
     //#define MSJ "@ABCDEFGHIJKLMKNOPQRSTUVWXYZ"
     #define MSJ "@ABC"
 #else 
@@ -43,7 +45,8 @@
     #define ADDRESS_SLAVE           0x6002
     #define MRF24_TRANSMITER_ENABLE
     //#define MRF24_RECEIVER_ENABLE
-    #define ENABLE_INTERRUPT_MRF24
+    //#define ENABLE_INTERRUPT_MRF24
+    
 #elif  defined(MODULE_IS_RX)
     #define ADDRESS_LONG            0x1122334455667701
     #define ADDRESS_LONG_SLAVE      0x1122334455667702
@@ -52,7 +55,7 @@
     #define ADDRESS_SLAVE           0x6001
     #define MRF24_RECEIVER_ENABLE   //MRF24_RECEIVER_ENABLE
     //#define MRF24_TRANSMITER_ENABLE
-    #define ENABLE_INTERRUPT_MRF24
+    //#define ENABLE_INTERRUPT_MRF24
 #endif
 
 #define LOG_FILENAME "log_mrf_"
