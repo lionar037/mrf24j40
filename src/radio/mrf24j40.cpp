@@ -431,7 +431,7 @@ void Mrf24j_t::settings_mrf(void){
     }
 
     void Mrf24j_t::delay(const int64_t t){
-        auto  time std::make_unique<TYME::Time_t>();
+        auto  time  = std::make_unique<TYME::Time_t>();
         time->delay_ms(t);
         //TYME::delay_ms(t);
     }
