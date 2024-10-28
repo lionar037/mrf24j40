@@ -43,8 +43,12 @@ namespace GPIO{
             if (!bcm2835_init()) 
         #endif
             {
-                throw "Initialization failed. Are you running as root?";
+                //throw "Initialization failed. Are you running as root?";
+                throw std::runtime_error("Initialization failed. Are you running as root?");
             }  
+                        
+            
+            
 
             #ifdef SPI_BCM2835
             bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);//for mode SPI
