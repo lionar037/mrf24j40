@@ -44,8 +44,8 @@
     #define PAN_ID                  0x1234
     #define ADDRESS_SLAVE           0x6002
     #define MRF24_TRANSMITER_ENABLE
-    #define MRF24_RECEIVER_ENABLE
-    #define ENABLE_INTERRUPT_MRF24
+    //#define MRF24_RECEIVER_ENABLE
+    //#define ENABLE_INTERRUPT_MRF24
     
 #elif  defined(MODULE_IS_RX)
     #define ADDRESS_LONG            0x1122334455667701
@@ -54,7 +54,7 @@
     #define PAN_ID                  0x1234
     #define ADDRESS_SLAVE           0x6001
     #define MRF24_RECEIVER_ENABLE   //MRF24_RECEIVER_ENABLE
-    #define MRF24_TRANSMITER_ENABLE
+    //#define MRF24_TRANSMITER_ENABLE
     #define ENABLE_INTERRUPT_MRF24
 #endif
 
@@ -65,7 +65,7 @@
 //#define DBG_BUFFER
 //#define DBG_FILES //imprime Debugger en files
 //#define DBG_DISPLAY_OLED
-//#define DBG_MRF
+#define DBG_MRF
 #define DBG_RADIO
 //#define ENABLE_PRINTS_DBG
 //#define DBG_PRINT_GET_INFO
