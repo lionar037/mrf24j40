@@ -65,7 +65,7 @@ DEPS = $(ALLOBJ:.o=.d)
 # Incluir los archivos de dependencias generados (.d)
 -include $(DEPS)
 
-CC          	:= clang++
+CC          	:= g++
 C		:= gcc
 MKDIR       	:= mkdir -p
 SRC         	:= $(PROJECT_NAME)
@@ -78,7 +78,7 @@ ifeq ($(ARCH),x86_64)
 	CC := g++
 #CC := clang++
 else
-	CC := g++
+	CC := clang++
 endif
 
 
