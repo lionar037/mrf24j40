@@ -45,7 +45,7 @@ namespace GPIO{
             
             bool        interrupt_handler();
             //void        sig_handler(int sig);
-            void        function();
+            //void        function();
 
         private :
             inline static bool led_state;
