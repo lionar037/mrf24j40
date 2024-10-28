@@ -28,7 +28,6 @@
 namespace GPIO{
 
     Gpio_t::Gpio_t()
-    : 
     {
         #ifdef DBG_GPIO
             std::printf("Gpio_t::Gpio_t()\n");
