@@ -17,7 +17,7 @@
 
 #include <gpio/gpio.hpp>
 #include <iostream>
-#include <bcm2835.h>
+//#include <bcm2835.h>
 //#include <stdint.h>
 //#include <string>
 //#include <string_view>
@@ -46,56 +46,52 @@ namespace GPIO{
                 //throw "Initialization failed. Are you running as root?";
                 throw std::runtime_error("Initialization failed. Are you running as root?");
             }  
-                        
-            
-            
+                                                
 
-            #ifdef SPI_BCM2835
-            bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);//for mode SPI
-            bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);//for mode SPI
-            bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);//for mode SPI
-            bcm2835_spi_chipSelect(BCM2835_SPI_CS0);//for mode SPI
-            #endif
-
-            bcm2835_gpio_fsel( IN_INTERRUPT     , BCM2835_GPIO_FSEL_INPT );
-            bcm2835_gpio_fsel( OUT_INTERRUPT    , BCM2835_GPIO_FSEL_OUTP );                
-
-            // Habilita el pull-up resistor para el botón
-            bcm2835_gpio_set_pud(IN_INTERRUPT, BCM2835_GPIO_PUD_UP);
-
-        }
-
-        void Gpio_t::close(){
         #ifdef SPI_BCM2835
-            bcm2835_spi_end();
+        bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);//for mode SPI
+        bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);//for mode SPI
+        bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);//for mode SPI
+        bcm2835_spi_chipSelect(BCM2835_SPI_CS0);//for mode SPI
         #endif
-            bcm2835_close();  
+        bcm2835_gpio_fsel( IN_INTERRUPT     , BCM2835_GPIO_FSEL_INPT );
+        bcm2835_gpio_fsel( OUT_INTERRUPT    , BCM2835_GPIO_FSEL_OUTP );                
+        // Habilita el pull-up resistor para el botón
+        bcm2835_gpio_set_pud(IN_INTERRUPT, BCM2835_GPIO_PUD_UP);
+
+    }
+
+    void Gpio_t::close(){
+    #ifdef SPI_BCM2835
+        bcm2835_spi_end();
+    #endif
+        bcm2835_close();  
+    }
+
+    Gpio_t::~Gpio_t(){
+        close();
+    }
+
+    void Gpio_t::toogle(bool& led){
+        if (led)
+        {
+            bcm2835_gpio_write(OUT_INTERRUPT, HIGH);              
         }
+        else{                
+            bcm2835_gpio_write(OUT_INTERRUPT, LOW); 
+        }     
+        led=!led;       
+    }
 
-        Gpio_t::~Gpio_t(){
-            close();
-        }
+    void Gpio_t::transfer(const uint8_t cmd){
+     #ifdef SPI_BCM2835
+             bcm2835_spi_transfer(cmd);
+     #endif                
+    } 
 
-        void Gpio_t::toogle(bool& led){
-            if (led)
-            {
-                bcm2835_gpio_write(OUT_INTERRUPT, HIGH);              
-            }
-            else{                
-                bcm2835_gpio_write(OUT_INTERRUPT, LOW); 
-            }     
-            led=!led;       
-        }
-
-       void Gpio_t::transfer(uint8_t cmd){
-        #ifdef SPI_BCM2835
-                bcm2835_spi_transfer(cmd);
-        #endif                
-       } 
-
-       void Gpio_t::delay(const int64_t time){
-            bcm2835_delay(time);
-       }
+    void Gpio_t::delay(const int64_t time){
+         bcm2835_delay(time);
+    }
 
     void Gpio_t::app(bool& input_interrupt)
     {        

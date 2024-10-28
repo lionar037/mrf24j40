@@ -32,15 +32,15 @@ namespace GPIO{
 
     struct Gpio_t{
         public:
-            Gpio_t();
-            ~Gpio_t();
+            Gpio_t      ();
+            ~Gpio_t     ();
             void        app(bool& ) ;
-            void        transfer(uint8_t );
+            void        transfer(const uint8_t );
             void        delay(const int64_t);
             void        toogle(bool&);
         protected:
-            void init();
-            void close();
+            void        init();
+            void        close();
         private :
             inline static bool led_state;
             static constexpr int IN_INTERRUPT = RPI_V2_GPIO_P1_23;
