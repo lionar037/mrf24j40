@@ -66,10 +66,10 @@
 //#define DBG_FILES //imprime Debugger en files
 //#define DBG_DISPLAY_OLED
 //#define DBG_MRF
-//#define DBG_RADIO
+#define DBG_RADIO
 //#define ENABLE_PRINTS_DBG
 //#define DBG_PRINT_GET_INFO
-//#define DBG_GPIO
+#define DBG_GPIO
 //#define DBG_OLED
 //#define DBG_SPI
 
