@@ -35,7 +35,7 @@ namespace GPIO{
         public:
             explicit Gpio_t()noexcept;
             ~Gpio_t();//=default noexcept;        
-            const bool app(bool& status) {return true;}
+            const bool app(bool& status) ;//;{return true;}
             void Gpio_t::transfer(uint8_t cmd);
         protected:
             void init();
