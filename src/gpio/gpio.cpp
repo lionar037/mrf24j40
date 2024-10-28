@@ -36,8 +36,7 @@ namespace GPIO{
         init();
     }
 
-    void Gpio_t::init(){
-        
+    void Gpio_t::init(){        
         #ifdef SPI_BCM2835
             if (!bcm2835_init() || !bcm2835_spi_begin()) 
         #else
