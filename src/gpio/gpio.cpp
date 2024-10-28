@@ -27,8 +27,8 @@ namespace GPIO{
         #endif        
         led_state = false ;
         init();
-        std::cout<<"pin led : " <<std::to_string(RPI_V2_GPIO_P1_23)<<"\n";
-        std::cout<<"pin interrupt : " <<std::to_string(RPI_V2_GPIO_P1_12)<<"\n";
+        std::cout<<"pin led : " <<std::to_string(RPI_V2_GPIO_P1_16)<<"\n";
+        std::cout<<"pin interrupt : " <<std::to_string(RPI_V2_GPIO_P1_32)<<"\n";
     }
 
     void Gpio_t::init(){        
