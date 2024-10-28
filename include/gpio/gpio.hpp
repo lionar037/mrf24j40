@@ -41,6 +41,7 @@ namespace GPIO{
         protected:
             void        init();
             void        close();
+            void        check_status();
         private :
             inline static bool led_state;
             static constexpr int INTERRUPT_INPT = RPI_V2_GPIO_P1_16;

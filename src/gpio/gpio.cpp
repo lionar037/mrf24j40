@@ -90,11 +90,21 @@ namespace GPIO{
          bcm2835_delay(time);
     }
 
+    void Gpio_t::check_status(){
+        while (bcm2835_gpio_lev(INTERRUPT_INPT) == HIGH) {
+            bcm2835_gpio_write(LED_OUT,LOW);
+            led_state=false;
+        }
+    }
+
+
+
     void Gpio_t::app(bool& input_interrupt)
     {        
         //bool button_pressed = false;
         //while (true) {
             // Lee el estado del botón (activo en bajo)
+            check_status();
             if (bcm2835_gpio_lev(INTERRUPT_INPT) == LOW) {
                 std::cout<<"interrupt\n";
                 if (!input_interrupt) {
