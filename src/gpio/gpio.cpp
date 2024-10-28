@@ -47,7 +47,7 @@ volatile bool running = true;
     }
 
     void Gpio_t::init(){        
-        function();
+        
         #ifdef SPI_BCM2835
             if (!bcm2835_init() || !bcm2835_spi_begin()) 
         #else
