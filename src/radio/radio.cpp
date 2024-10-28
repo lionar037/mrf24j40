@@ -153,7 +153,7 @@ void Radio_t::handle_rx() {
     std::memcpy(bufferMonitor.data() , mrf24j40_spi->get_rxbuf() ,size);
 
     std::cout<< "tamaño del paquete : " << std::to_string(bufferMonitor.size())<<"\n";
-    std::printf(bufferMonitor.data());//    std::cout << " bytes long " ;
+    std::cout<<bufferMonitor.data();//    std::cout << " bytes long " ;
     std::cout<< "\n\n\n";
     if(mrf24j40_spi->get_bufferPHY()){
         std::printf(" Packet data (PHY Payload) :");//  std::cout << " Packet data (PHY Payload) :";
@@ -169,11 +169,12 @@ void Radio_t::handle_rx() {
         std::printf("ASCII data (relevant data) :"); //std::cout<<"\r\nASCII data (relevant data) :\n";
         const auto recevive_data_length = mrf24j40_spi->rx_datalength();
         std::cout<<"\tdata_length : " << std::to_string(recevive_data_length) ;        
-        std::printf("\n");        
-        std::printf(reinterpret_cast<const char*>(mrf24j40_spi->get_rxinfo()->rx_data ));
+        std::printf("\n"); 
+        const std::string get_rx_info = reinterpret_cast<const char*>(mrf24j40_spi->get_rxinfo()->rx_data );
+        std::cout<< get_rx_info << "\n" ;
 
         for (auto& byte : mrf24j40_spi->get_rxinfo()->rx_data)std::cout<<byte;        
-        std::cout<<"\n";;
+        std::cout<<"\n";
 
     #ifdef DBG_PRINT_GET_INFO 
       
