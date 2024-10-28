@@ -17,6 +17,8 @@
 
 #include <gpio/gpio.hpp>
 #include <iostream>
+#include <stdio.h>
+#include <signal.h>
 
 namespace GPIO{
 
@@ -117,9 +119,9 @@ volatile bool keep_running = true;
     {        
     if(keep_running)
     {
-       if (bcm2835_gpio_eds(INTERRUPT_PIN)) {
+       if (bcm2835_gpio_eds(INTERRUPT_INPT)) {
             // Limpia el flag de evento de detección
-            bcm2835_gpio_set_eds(INTERRUPT_PIN);
+            bcm2835_gpio_set_eds(INTERRUPT_INPT);
 
             // Llama a la función que maneja la interrupción
             interrupt_handler();
