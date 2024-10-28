@@ -49,11 +49,11 @@ namespace GPIO{
         bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);//for mode SPI
         bcm2835_spi_chipSelect(BCM2835_SPI_CS0);//for mode SPI
         #endif
-        bcm2835_gpio_fsel( IN_INTERRUPT     , BCM2835_GPIO_FSEL_INPT );
-        bcm2835_gpio_fsel( OUT_INTERRUPT    , BCM2835_GPIO_FSEL_OUTP );                
+        bcm2835_gpio_fsel( INTERRUPT_INPT     , BCM2835_GPIO_FSEL_INPT );
+        bcm2835_gpio_fsel( LED_OUT    , BCM2835_GPIO_FSEL_OUTP );                
         // Habilita el pull-up resistor para el botón
-        bcm2835_gpio_set_pud(IN_INTERRUPT, BCM2835_GPIO_PUD_UP);
-        bcm2835_gpio_write(OUT_INTERRUPT, LOW); 
+        bcm2835_gpio_set_pud(INTERRUPT_INPT, BCM2835_GPIO_PUD_UP);
+        bcm2835_gpio_write(LED_OUT, LOW); 
 
     }
 
@@ -71,10 +71,10 @@ namespace GPIO{
     void Gpio_t::toogle(bool& led){
         if (led)
         {
-            bcm2835_gpio_write(OUT_INTERRUPT, HIGH);              
+            bcm2835_gpio_write(LED_OUT, HIGH);              
         }
         else{                
-            bcm2835_gpio_write(OUT_INTERRUPT, LOW); 
+            bcm2835_gpio_write(LED_OUT, LOW); 
         }     
         led=!led;       
     }
@@ -94,11 +94,11 @@ namespace GPIO{
         //bool button_pressed = false;
         //while (true) {
             // Lee el estado del botón (activo en bajo)
-            if (bcm2835_gpio_lev(IN_INTERRUPT) == LOW) {
+            if (bcm2835_gpio_lev(INTERRUPT_INPT) == LOW) {
                 if (!input_interrupt) {
                     // Cambia el estado del LED
                     led_state = !led_state;
-                    bcm2835_gpio_write(OUT_INTERRUPT, led_state ? HIGH : LOW);
+                    bcm2835_gpio_write(LED_OUT, led_state ? HIGH : LOW);
 
                     // Marca que el botón ha sido presionado
                     input_interrupt = true;
