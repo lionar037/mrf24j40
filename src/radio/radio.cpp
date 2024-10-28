@@ -102,7 +102,7 @@ std::string msj_txt = {"MRF24J40 RX"};
                 //for(const auto& byte : msj) std::cout << byte ; 
                     // Imprimir los primeros 8 bytes en hexadecimal y el resto en ASCII
     for (size_t i = 0; i < msj.size(); ++i) {
-        if (i < 8) {
+        if (i < 3) {
             // Imprimir en hexadecimal los primeros 8 bytes
             std::cout << "0x"<<std::hex << static_cast<int>(msj[i]) << ":";
         } else {
