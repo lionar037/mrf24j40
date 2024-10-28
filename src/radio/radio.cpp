@@ -85,8 +85,11 @@ std::string msj_txt = {"MRF24J40 RX"};
             std::strcpy(buffer_transmiter.data , MSJ);
 
             //const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
-            const std::string msj (strlen(buffer_transmiter));//= reinterpret_cast<const char* >(&buffer_transmiter);
-            std::memcpy(msj.data(),buffer_transmiter,strlen(buffer_transmiter));
+            
+            const std::fill msj =buffer_transmiter;//= reinterpret_cast<const char* >(&buffer_transmiter);
+//strlen(buffer_transmiter)
+
+            //std::memcpy(msj,buffer_transmiter,strlen(buffer_transmiter));
             //  const auto* buff {reinterpret_cast<const char *>(mrf24j40_spi->get_rxinfo()->rx_data)};
             #ifdef DBG_RADIO
                 //std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;

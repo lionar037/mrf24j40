@@ -58,16 +58,12 @@ volatile bool keep_running = true;
         bcm2835_gpio_fsel( LED_OUT    , BCM2835_GPIO_FSEL_OUTP );                
         bcm2835_gpio_write(LED_OUT, LOW); 
 
+        
+        bcm2835_gpio_fsel(INTERRUPT_PIN, BCM2835_GPIO_FSEL_INPT);
+            // Habilita el pull-up interno
+        bcm2835_gpio_set_pud(INTERRUPT_PIN, BCM2835_GPIO_PUD_UP);
+        bcm2835_gpio_fen(INTERRUPT_PIN);  // Activar detección de flanco descendente
 
-    bcm2835_gpio_fsel(INTERRUPT_PIN, BCM2835_GPIO_FSEL_INPT);
-
-    // Habilita el pull-up interno
-    bcm2835_gpio_set_pud(INTERRUPT_PIN, BCM2835_GPIO_PUD_UP);
-
-    // Configura la detección de borde de bajada (falling edge)
-    bcm2835_gpio_len(INTERRUPT_PIN);   // Activa la detección de eventos de bajo nivel
-    bcm2835_gpio_ren(INTERRUPT_PIN);   // Activa la detección de flanco ascendente (opcional si se necesita)
-    bcm2835_gpio_fen(INTERRUPT_PIN);   // Activa la detección de flanco descendente
     #ifdef DBG_GPIO
         std::cout<<"Esperando interrupción en el pin : "<< INTERRUPT_PIN <<" ... \n";
     #endif
@@ -84,16 +80,9 @@ volatile bool keep_running = true;
         close();
     }
 
-    void Gpio_t::toogle()
-    {
-        if (led_state)
-        {
-            bcm2835_gpio_write(LED_OUT, HIGH);              
-        }
-        else{                
-            bcm2835_gpio_write(LED_OUT, LOW); 
-        }     
-        led_state=!led_state;       
+    void Gpio_t::toogle() {
+        bcm2835_gpio_write(LED_OUT, led_state ? HIGH : LOW);
+        led_state = !led_state;
     }
 
     void Gpio_t::transfer(const uint8_t cmd){
@@ -158,7 +147,7 @@ volatile bool keep_running = true;
         printf("Interrupción recibida: Borde de bajada detectado (EDGE_FALLING).\n");
     }
 
-    void Gpio_t::sig_handler(int sig) {
+    static void sig_handler(int sig) {
         keep_running = false;
     }
 
