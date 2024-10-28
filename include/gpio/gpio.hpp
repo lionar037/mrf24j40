@@ -48,7 +48,7 @@ namespace GPIO{
 
         private :
             inline static bool led_state;
-            static constexpr int INTERRUPT_INPT = RPI_V2_GPIO_P1_16;
+            static constexpr int INTERRUPT_PIN = RPI_V2_GPIO_P1_16;
             static constexpr int LED_OUT = RPI_V2_GPIO_P1_32;
     };
 }
