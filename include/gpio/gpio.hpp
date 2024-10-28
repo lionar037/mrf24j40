@@ -33,7 +33,7 @@ namespace GPIO{
 
     struct Gpio_t{
         public:
-            explicit    Gpio_t()noexcept;
+            explicit    Gpio_t();
             ~Gpio_t();//=default noexcept;        
             const bool  app(bool& ) ;//;{return true;}
             void        transfer(uint8_t );
