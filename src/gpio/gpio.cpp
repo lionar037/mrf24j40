@@ -120,21 +120,21 @@ volatile bool running = true;
 
 
     bool Gpio_t::interrupt_handler() {
-        if (bcm2835_gpio_eds(INTERRUPT_PIN)) {
+        if (bcm2835_gpio_eds(INTERRUPT_PIN)) 
+        {
             // Limpia el flag de evento
             bcm2835_gpio_set_eds(INTERRUPT_PIN);
 
             interrupt_count++;
-            std::cout << "Interrupci      n recibida: Mensaje " << interrupt_count >
+            std::cout << "Interrupcion recibida: Mensaje " << interrupt_count <<"\n";
 
-            if (interrupt_count >= 3) {
+            if (interrupt_count >= 3) 
                 running = false; // Detener el programa despu      s de 3 interrupci
-            }
+            
             return false;
         }
-        else{
-            return true;
-        }
+        
+        return true;
     }
 
     void Gpio_t::app(bool& flag){        
