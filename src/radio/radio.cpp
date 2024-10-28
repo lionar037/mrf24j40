@@ -62,7 +62,9 @@ std::string msj_txt = {"MRF24J40 RX"};
 
     void Radio_t::Start(bool& flag) {
 
-
+        if (flag==false){
+            std::cout<<"Radio_t::Start :  interrupt !!! \n";
+        }
         flag = mrf24j40_spi->check_flags(&handle_rx, &handle_tx);
         const unsigned long current_time = 100000;
         if (current_time - m_last_time > m_tx_interval) {
@@ -75,29 +77,32 @@ std::string msj_txt = {"MRF24J40 RX"};
                     std::cout<<"send msj 16() ... \n";
                 #endif
             #endif
-            buffer_transmiter.head=HEAD; 
-            buffer_transmiter.size=(~strlen(MSJ))&0xffff ;
+            buffer_transmiter.head=HEAD; //conformando el mensaje
+            buffer_transmiter.size=(~strlen(MSJ))&0xffff ;  // invierte el tamaño de MSJ ,si fuera alrevez no podria calcularlo
             #ifdef DBG_RADIO
-            //std::cout<<"\n strlen(MSJ) : "<<  strlen(MSJ)<<"\n";  
+            std::cout<<"\n tamaño del MSJ : "<<  strlen(MSJ)<<"\n";  
             #endif  
             std::strcpy(buffer_transmiter.data , MSJ);
 
-            const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
+            //const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
+            const std::string msj (strlen(buffer_transmiter));//= reinterpret_cast<const char* >(&buffer_transmiter);
+            std::memcpy(msj.data(),buffer_transmiter,strlen(buffer_transmiter));
             //  const auto* buff {reinterpret_cast<const char *>(mrf24j40_spi->get_rxinfo()->rx_data)};
             #ifdef DBG_RADIO
-                std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
+                //std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
+                std::cout<<"\n MSJ : size ( "<<  std::to_string(msj.size) <<" , "<< std::to_string(msj.size_t) << " )\n" ;
                 std::cout<<"\n" ;
             #endif
-            const std::string pf(msj);
+            //const std::string pf(msj);
             #ifdef DBG_RADIO
-                for(const auto& byte : pf) std::cout << byte ; 
+                for(const auto& byte : msj) std::cout << byte ; 
             #endif
             std::cout<<"\n" ;         
             #ifdef USE_MRF24_TX 
                 #ifdef MACADDR64
-                    mrf24j40_spi->send(ADDRESS_LONG_SLAVE, msj);               
+                    mrf24j40_spi->send(ADDRESS_LONG_SLAVE, msj.data());               
                 #elif defined(MACADDR16)
-                    mrf24j40_spi->send(ADDRESS_SLAVE, msj);                                
+                    mrf24j40_spi->send(ADDRESS_SLAVE, msj.data());                                
                 #endif
         #endif
     //      const auto status = mrf24j40_spi->read_short(MRF_TXSTAT);//or TXNSTAT =0: Transmissionwassuccessful         
@@ -105,7 +110,7 @@ std::string msj_txt = {"MRF24J40 RX"};
             if (status==0) {
                 std::cout<<"\nTX ACK failed\n";
             } 
-            if (status==1)  {//0 = Succeeded
+            if (status>=1)  {//0 = Succeeded
                 std::cout<<"\tTX ACK Ok   \n";
                 #ifdef DBG_RADIO
                     std::cout<<" retries : "<<std::to_string(mrf24j40_spi->get_txinfo()->retries);

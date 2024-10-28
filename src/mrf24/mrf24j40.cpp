@@ -307,7 +307,7 @@ namespace MRF24J40{
                 std::cout<< "\t\trecibe packete \n";
             #endif
             rx_handler();
-            return true;
+            return false;
         }
         if (m_flag_got_tx) {
             m_flag_got_tx = 0;
@@ -317,7 +317,7 @@ namespace MRF24J40{
             tx_handler();
             return false;
         }
-        return false;
+        return true;
     }
 
 

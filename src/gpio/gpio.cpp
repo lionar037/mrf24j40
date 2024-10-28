@@ -115,7 +115,7 @@ volatile bool keep_running = true;
 
 
 
-    void Gpio_t::app(bool& input_interrupt)
+    void Gpio_t::app(bool& flag)
     {        
     if(keep_running)
     {
@@ -125,11 +125,11 @@ volatile bool keep_running = true;
 
             // Llama a la función que maneja la interrupción
             interrupt_handler();
-            input_interrupt = true;
+            flag = false;
         }
     }
     else{
-        input_interrupt = false;
+        flag = true;
     }
  /*
             if (bcm2835_gpio_lev(INTERRUPT_INPT) == LOW) {
