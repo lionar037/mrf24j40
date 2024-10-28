@@ -85,9 +85,10 @@ std::string msj_txt = {"MRF24J40 RX"};
             std::strcpy(buffer_transmiter.data , MSJ);
 
             //const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
-            
-            const std::fill msj =buffer_transmiter;//= reinterpret_cast<const char* >(&buffer_transmiter);
-//strlen(buffer_transmiter)
+            const uint8_t* struct_ptr = reinterpret_cast<const uint8_t*>(&buffer_transmiter);
+            size_t struct_size = sizeof(DATA::packet_tx);
+             std::vector<uint8_t> msj(struct_ptr, struct_ptr + struct_size);
+            //= reinterpret_cast<const char* >(&buffer_transmiter);
 
             //std::memcpy(msj,buffer_transmiter,strlen(buffer_transmiter));
             //  const auto* buff {reinterpret_cast<const char *>(mrf24j40_spi->get_rxinfo()->rx_data)};
@@ -98,7 +99,23 @@ std::string msj_txt = {"MRF24J40 RX"};
             #endif
             //const std::string pf(msj);
             #ifdef DBG_RADIO
-                for(const auto& byte : msj) std::cout << byte ; 
+                //for(const auto& byte : msj) std::cout << byte ; 
+                    // Imprimir los primeros 8 bytes en hexadecimal y el resto en ASCII
+    for (size_t i = 0; i < msj.size(); ++i) {
+        if (i < 8) {
+            // Imprimir en hexadecimal los primeros 8 bytes
+            std::cout << "0x"<<std::hex << static_cast<int>(msj[i]) << ":";
+        } else {
+            // Imprimir el resto en ASCII (si es imprimible)
+            if (std::isprint(msj[i])) {
+                std::cout << static_cast<char>(msj[i]);
+            } else {
+                // Si el carácter no es imprimible, imprimir un '.'
+                std::cout << ".";
+            }
+        }
+    }
+    
             #endif
             std::cout<<"\n" ;         
             #ifdef USE_MRF24_TX 
