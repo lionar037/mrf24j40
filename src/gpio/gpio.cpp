@@ -28,7 +28,7 @@
 namespace GPIO{
 
     Gpio_t::Gpio_t()
-    : led_state  { false };
+    : led_state  { false }
     {
         #ifdef DBG_GPIO
             std::printf("Gpio_t::Gpio_t()\n");
