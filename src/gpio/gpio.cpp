@@ -82,7 +82,7 @@ namespace GPIO{
      #endif                
     } 
 
-    void Gpio_t::delay(const int64_t time){
+    void Gpio_t::delay_ms(const int64_t time){
          bcm2835_delay(time);
     }
 
@@ -105,7 +105,7 @@ namespace GPIO{
                 input_interrupt = false;
             }
             // Pequeña espera para evitar rebotes
-            bcm2835_delay(10);
+            delay_ms(10);
         //}
     }
 }
