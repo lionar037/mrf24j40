@@ -66,7 +66,7 @@ std::string msj_txt = {"MRF24J40 RX"};
             std::cout<<"Radio_t::Start :  interrupt !!! \n";
         }
         flag = mrf24j40_spi->check_flags(&handle_rx, &handle_tx);
-        const unsigned long current_time = 100000;
+        const unsigned long current_time = 1000;
         if (current_time - m_last_time > m_tx_interval) {
             m_last_time = current_time;
         #ifdef MRF24_TRANSMITER_ENABLE   
@@ -111,14 +111,14 @@ std::string msj_txt = {"MRF24J40 RX"};
                 std::cout << static_cast<char>(msj[i]);
             } else {
                 // Si el carácter no es imprimible, imprimir un '.'
-                std::cout << ".";
+                std::cout << " ";
             }
         }
     }
     
             #endif
             std::cout<<"\n" ;         
-            #ifdef USE_MRF24_TX 
+        #ifdef USE_MRF24_TX 
                 #ifdef MACADDR64
                     mrf24j40_spi->send(ADDRESS_LONG_SLAVE, msj.data());               
                 #elif defined(MACADDR16)
