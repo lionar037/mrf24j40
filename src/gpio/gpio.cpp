@@ -27,6 +27,8 @@ namespace GPIO{
         #endif        
         led_state = false ;
         init();
+        std::cout<<"pin led : " <<std::to_string(RPI_V2_GPIO_P1_23)<<"\n";
+        std::cout<<"pin interrupt : " <<std::to_string(RPI_V2_GPIO_P1_12)<<"\n";
     }
 
     void Gpio_t::init(){        
@@ -51,6 +53,7 @@ namespace GPIO{
         bcm2835_gpio_fsel( OUT_INTERRUPT    , BCM2835_GPIO_FSEL_OUTP );                
         // Habilita el pull-up resistor para el botón
         bcm2835_gpio_set_pud(IN_INTERRUPT, BCM2835_GPIO_PUD_UP);
+        bcm2835_gpio_write(OUT_INTERRUPT, LOW); 
 
     }
 
