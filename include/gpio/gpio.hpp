@@ -35,7 +35,7 @@ namespace GPIO{
         public:
             explicit    Gpio_t();
             ~Gpio_t();//=default noexcept;        
-            const bool  app(bool& ) ;//;{return true;}
+            void        app(bool& ) ;//;{return true;}
             void        transfer(uint8_t );
             void        delay(const int64_t);
             void        toogle(bool&);
