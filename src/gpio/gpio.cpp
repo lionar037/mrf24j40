@@ -80,7 +80,7 @@ namespace GPIO{
             else{                
                 bcm2835_gpio_write(OUT_INTERRUPT, LOW); 
             }     
-            led=~led;       
+            led=!led;       
         }
 
        void Gpio_t::transfer(uint8_t cmd){
