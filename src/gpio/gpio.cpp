@@ -24,11 +24,11 @@ namespace GPIO{
     {
         #ifdef DBG_GPIO
             std::printf("Gpio_t::Gpio_t()\n");
+            std::cout<<"pin led : " <<std::to_string(RPI_V2_GPIO_P1_32)<<"\n";
+            std::cout<<"pin interrupt : " <<std::to_string(RPI_V2_GPIO_P1_16)<<"\n";
         #endif        
         led_state = false ;
-        init();
-        std::cout<<"pin led : " <<std::to_string(RPI_V2_GPIO_P1_32)<<"\n";
-        std::cout<<"pin interrupt : " <<std::to_string(RPI_V2_GPIO_P1_16)<<"\n";
+        init();                
     }
 
     void Gpio_t::init(){        
