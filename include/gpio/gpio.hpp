@@ -43,7 +43,7 @@ namespace GPIO{
             void        close();
             void        check_status();
             void        interrupt_handler();
-            void        sig_handler(int sig);
+            //void        sig_handler(int sig);
             void        function();
 
         private :
