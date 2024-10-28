@@ -20,6 +20,8 @@
 
 namespace GPIO{
 
+volatile bool keep_running = true;
+
     Gpio_t::Gpio_t()
     {
         #ifdef DBG_GPIO
@@ -33,6 +35,7 @@ namespace GPIO{
     }
 
     void Gpio_t::init(){        
+        function();
         #ifdef SPI_BCM2835
             if (!bcm2835_init() || !bcm2835_spi_begin()) 
         #else
@@ -50,11 +53,22 @@ namespace GPIO{
         bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);//for mode SPI
         bcm2835_spi_chipSelect(BCM2835_SPI_CS0);//for mode SPI
         #endif
-        bcm2835_gpio_fsel( INTERRUPT_INPT     , BCM2835_GPIO_FSEL_INPT );
         bcm2835_gpio_fsel( LED_OUT    , BCM2835_GPIO_FSEL_OUTP );                
-        // Habilita el pull-up resistor para el botón
-        bcm2835_gpio_set_pud(INTERRUPT_INPT, BCM2835_GPIO_PUD_UP);
         bcm2835_gpio_write(LED_OUT, LOW); 
+
+
+    bcm2835_gpio_fsel(INTERRUPT_PIN, BCM2835_GPIO_FSEL_INPT);
+
+    // Habilita el pull-up interno
+    bcm2835_gpio_set_pud(INTERRUPT_PIN, BCM2835_GPIO_PUD_UP);
+
+    // Configura la detección de borde de bajada (falling edge)
+    bcm2835_gpio_len(INTERRUPT_PIN);   // Activa la detección de eventos de bajo nivel
+    bcm2835_gpio_ren(INTERRUPT_PIN);   // Activa la detección de flanco ascendente (opcional si se necesita)
+    bcm2835_gpio_fen(INTERRUPT_PIN);   // Activa la detección de flanco descendente
+    #ifdef DBG_GPIO
+        std::cout<<"Esperando interrupción en el pin : "<< INTERRUPT_PIN <<" ... \n";
+    #endif
     }
 
     void Gpio_t::close(){
@@ -99,16 +113,23 @@ namespace GPIO{
 
 
 
-    void Gpio_t::app(bool& input_interrupt)
+    void Gpio_t::app(bool& flag)
     {        
-        //bool button_pressed = false;
-        //while (true) {
-            // Lee el estado del botón (activo en bajo)
-        if(bcm2835_gpio_lev(INTERRUPT_INPT) == HIGH){
-            led_state=false;
-            bcm2835_gpio_write(LED_OUT,LOW);
-            return;
+    if(keep_running)
+    {
+       if (bcm2835_gpio_eds(INTERRUPT_PIN)) {
+            // Limpia el flag de evento de detección
+            bcm2835_gpio_set_eds(INTERRUPT_PIN);
+
+            // Llama a la función que maneja la interrupción
+            interrupt_handler();
+            input_interrupt = true;
         }
+    }
+    else{
+        input_interrupt = false;
+    }
+ /*
             if (bcm2835_gpio_lev(INTERRUPT_INPT) == LOW) {
                 std::cout<<"interrupt\n";
                 if (!input_interrupt) {
@@ -122,11 +143,25 @@ namespace GPIO{
                 }
             } else {
                 // Si el botón no está presionado, resetea la variable
-                input_interrupt = false;
+                //input_interrupt = false;
+                input_interrupt = true;
             }
             // Pequeña espera para evitar rebotes
             delay_ms(10);
         //}
+        */
+    }
+
+    void Gpio_t::interrupt_handler() {
+        printf("Interrupción recibida: Borde de bajada detectado (EDGE_FALLING).\n");
+    }
+
+    void Gpio_t::sig_handler(int sig) {
+        keep_running = false;
+    }
+
+    void Gpio_t::function(){
+        signal(SIGINT, sig_handler);
     }
 }
 

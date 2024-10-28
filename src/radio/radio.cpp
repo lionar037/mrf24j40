@@ -52,15 +52,16 @@ std::string msj_txt = {"MRF24J40 RX"};
     }
 
     const bool Radio_t::Run(void){         
-        //gpio->toogle(); 
+        
         gpio->app(m_flag);                                                   
         Start(m_flag);                
-        interrupt_routine() ;  
+        interrupt_routine();    // mrf24 object interrupt routine
         gpio->toogle();
         return m_flag; 
     }
 
     void Radio_t::Start(bool& flag) {
+
 
         flag = mrf24j40_spi->check_flags(&handle_rx, &handle_tx);
         const unsigned long current_time = 100000;
