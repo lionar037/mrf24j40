@@ -68,15 +68,16 @@ namespace GPIO{
         close();
     }
 
-    void Gpio_t::toogle(bool& led){
-        if (led)
+    void Gpio_t::toogle()
+    {
+        if (led_state)
         {
             bcm2835_gpio_write(LED_OUT, HIGH);              
         }
         else{                
             bcm2835_gpio_write(LED_OUT, LOW); 
         }     
-        led=!led;       
+        led_state=!led_state;       
     }
 
     void Gpio_t::transfer(const uint8_t cmd){

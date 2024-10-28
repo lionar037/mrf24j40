@@ -37,7 +37,7 @@ namespace GPIO{
             void        app(bool& ) ;
             void        transfer(const uint8_t );
             void        delay_ms(const int64_t);
-            void        toogle(bool&);
+            void        toogle();
         protected:
             void        init();
             void        close();
