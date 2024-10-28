@@ -39,11 +39,19 @@ extern "C"{
 
 namespace GPIO {
 
-    Gpio_t::Gpio_t(bool& status)
-        : m_state(status), m_gpio_in_fd(-1) {
+    Gpio_t::Gpio_t()
+        : m_state{true}, m_gpio_in_fd(-1) 
+    {
         #ifdef DBG_GPIO
         std::cout << "Gpio_t::Gpio_t()\n";
         #endif
+
+        settings( m_gpio_in  , DIR_IN  ,m_filenameGpio);
+        settings( m_gpio_out , DIR_OUT ,m_filenameGpio);
+
+        gpio_set_edge (m_gpio_in,EDGE_FALLING);
+        gpio_set_value(m_gpio_out,VALUE_HIGH);
+        
     }
 
     Gpio_t::~Gpio_t() {
@@ -238,13 +246,6 @@ namespace GPIO {
         #ifdef DBG_GPIO
             printf("const bool Gpio_t::app()...%d\r\n",m_res);   
         #endif         
-
-        settings( m_gpio_in  , DIR_IN  ,m_filenameGpio);
-        settings( m_gpio_out , DIR_OUT ,m_filenameGpio);
-        
-        gpio_set_edge (m_gpio_in,EDGE_FALLING);
-        gpio_set_value(m_gpio_out,VALUE_HIGH);
-
           
         m_gpio_in_fd = gpio_get_fd_to_value(m_gpio_in);
         // We will wait for button press here for 10s or exit anyway

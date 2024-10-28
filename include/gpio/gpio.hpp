@@ -80,7 +80,7 @@ constexpr int POLL_TIMEOUT = 10 * 1000;
 
     class Gpio_t {
     public:
-        explicit Gpio_t(bool& status);
+        explicit Gpio_t();
         ~Gpio_t();
 
         int         file_open_and_write_value(std::string_view fname, std::string_view wdata);
