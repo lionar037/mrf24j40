@@ -89,7 +89,7 @@ namespace GPIO{
         #endif                
        } 
 
-       void delay(const int64_t time){
+       void Gpio_t::delay(const int64_t time){
             bcm2835_delay(time);
        }
 
