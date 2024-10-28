@@ -107,7 +107,7 @@ volatile bool keep_running = true;
     }
 
     void Gpio_t::check_status(){
-        while (bcm2835_gpio_lev(INTERRUPT_INPT) == HIGH) {
+        while (bcm2835_gpio_lev(INTERRUPT_PIN) == HIGH) {
             bcm2835_gpio_write(LED_OUT,LOW);
             led_state=false;
         }
@@ -119,9 +119,9 @@ volatile bool keep_running = true;
     {        
     if(keep_running)
     {
-       if (bcm2835_gpio_eds(INTERRUPT_INPT)) {
+       if (bcm2835_gpio_eds(INTERRUPT_PIN)) {
             // Limpia el flag de evento de detección
-            bcm2835_gpio_set_eds(INTERRUPT_INPT);
+            bcm2835_gpio_set_eds(INTERRUPT_PIN);
 
             // Llama a la función que maneja la interrupción
             interrupt_handler();
