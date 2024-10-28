@@ -34,7 +34,7 @@ void Run_t::start()
             while(true)        
         #endif  
         #ifdef USE_MRF24_TX
-        flag = zigbee->Run();
+        //flag = zigbee->Run();
         #endif  
             {                                
                 flag = zigbee->Run();     

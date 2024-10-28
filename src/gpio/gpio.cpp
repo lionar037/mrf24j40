@@ -17,13 +17,6 @@
 
 #include <gpio/gpio.hpp>
 #include <iostream>
-//#include <bcm2835.h>
-//#include <stdint.h>
-//#include <string>
-//#include <string_view>
-//#include <vector>
-//#include <iomanip>
-
 
 namespace GPIO{
 
@@ -31,8 +24,8 @@ namespace GPIO{
     {
         #ifdef DBG_GPIO
             std::printf("Gpio_t::Gpio_t()\n");
-        #endif
-        led_state  = false ;
+        #endif        
+        led_state = false ;
         init();
     }
 

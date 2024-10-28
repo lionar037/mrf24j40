@@ -14,7 +14,7 @@ std::string msj_txt = {"MRF24J40 RX"};
     #else
     :   m_status          (false)
     #endif
-    ,   gpio            { std::make_unique<GPIO::Gpio_t>(m_status) }
+    ,   gpio            { std::make_unique<GPIO::Gpio_t>() }
     {              
         #ifdef DBG
             std::cout << "Size msj : ( "<<std::dec<<sizeof(MSJ)<<" )\n";
