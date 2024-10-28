@@ -31,8 +31,8 @@ namespace TYME{
             const std::string get_tyme();
             bool getHourNTP(const std::string_view& , std::chrono::system_clock::time_point& ) ;
             int timeUpdate() ;
-        private:
-            uint32_t m_delay{0};
+        //private:
+            //int64_t m_delay{0};
     };
 
 
