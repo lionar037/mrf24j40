@@ -264,7 +264,7 @@ namespace GPIO {
                 }
             if(m_res == 0) {
                 #ifdef DBG_GPIO
-                    std::cout<<"\nPoll success...timed out or received button press...\r\n";
+                    std::cout<<"\n interrupcion recibida o pulso en bajo...\r\n";
                 #endif
                 }
             if(fdpoll.revents & POLLPRI) {
