@@ -94,7 +94,7 @@ std::string msj_txt = {"MRF24J40 RX"};
             //  const auto* buff {reinterpret_cast<const char *>(mrf24j40_spi->get_rxinfo()->rx_data)};
             #ifdef DBG_RADIO
                 //std::cout<<"\n MSJ : size ( "<<  strlen(msj) <<" , "<<sizeof(msj) << " )\n" ;
-                std::cout<<"\n MSJ : size ( "<<  std::to_string(msj.size) <<" , "<< std::to_string(msj.size_t) << " )\n" ;
+                std::cout<<"\n MSJ : size ( "<<  std::to_string(msj.size()) <<" , "<< std::to_string(msj.size()) << " )\n" ;
                 std::cout<<"\n" ;
             #endif
             //const std::string pf(msj);
