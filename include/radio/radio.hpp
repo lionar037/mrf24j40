@@ -40,7 +40,7 @@ namespace MRF24J40{
             void                Start(bool&);
             void                interrupt_routine();
             
-            bool                Run(void);
+            const bool          Run();
             friend void         update();  
 
             static void         handle_tx();

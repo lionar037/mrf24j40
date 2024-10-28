@@ -51,7 +51,7 @@ std::string msj_txt = {"MRF24J40 RX"};
         m_flag=true;
     }
 
-    bool Radio_t::Run(void){         
+    const bool Radio_t::Run(void){         
         gpio->app(m_flag);                                            
         Start(m_flag);                
         interrupt_routine() ;  
