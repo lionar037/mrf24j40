@@ -115,7 +115,7 @@ volatile bool keep_running = true;
 
 
 
-    void Gpio_t::app(bool& flag)
+    void Gpio_t::app(bool& input_interrupt)
     {        
     if(keep_running)
     {
