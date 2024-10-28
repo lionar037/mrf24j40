@@ -43,6 +43,6 @@ namespace GPIO{
             void init();
             void close();
         private :
-            static bool led_state {};
+            static bool led_state;
     };
 }
