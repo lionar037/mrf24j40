@@ -42,7 +42,8 @@ namespace GPIO{
             void        init();
             void        close();
             void        check_status();
-            void        interrupt_handler();
+            
+            bool        interrupt_handler();
             //void        sig_handler(int sig);
             void        function();
 

@@ -18,11 +18,20 @@
 #include <gpio/gpio.hpp>
 #include <iostream>
 #include <stdio.h>
-#include <signal.h>
+//#include <signal.h>
+#include <csignal>
 
 namespace GPIO{
 
-volatile bool keep_running = true;
+//volatile bool keep_running = true;
+volatile int interrupt_count = 0;
+volatile bool running = true;
+
+
+    // Funci      n para manejar la se      al SIGINT (Ctrl+C)
+    void sigint_handler(int sig) {
+        running = false;
+    }
 
     Gpio_t::Gpio_t()
     {
@@ -33,7 +42,8 @@ volatile bool keep_running = true;
         #endif        
         led_state = false ;
         init();  
-        toogle();              
+        toogle();       
+        signal(SIGINT, sigint_handler);       
     }
 
     void Gpio_t::init(){        
@@ -55,18 +65,24 @@ volatile bool keep_running = true;
         bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);//for mode SPI
         bcm2835_spi_chipSelect(BCM2835_SPI_CS0);//for mode SPI
         #endif
-        bcm2835_gpio_fsel( LED_OUT    , BCM2835_GPIO_FSEL_OUTP );                
-        bcm2835_gpio_write(LED_OUT, LOW); 
-
-        
+        bcm2835_gpio_fsel( LED_OUT , BCM2835_GPIO_FSEL_OUTP );                
+        bcm2835_gpio_write( LED_OUT , LOW ); 
+            
+        // Configurar el pin GPIO 23 como entrada
         bcm2835_gpio_fsel(INTERRUPT_PIN, BCM2835_GPIO_FSEL_INPT);
-            // Habilita el pull-up interno
-        bcm2835_gpio_set_pud(INTERRUPT_PIN, BCM2835_GPIO_PUD_UP);
-        bcm2835_gpio_fen(INTERRUPT_PIN);  // Activar detección de flanco descendente
 
-    #ifdef DBG_GPIO
-        std::cout<<"Esperando interrupción en el pin : "<< INTERRUPT_PIN <<" ... \n";
-    #endif
+        // Habilitar pull-up interno para evitar valores flotantes
+        bcm2835_gpio_set_pud(INTERRUPT_PIN, BCM2835_GPIO_PUD_UP);
+
+        // Limpia cualquier interrupci      n previa pendiente
+        bcm2835_gpio_set_eds(INTERRUPT_PIN);
+
+        // Configurar para detectar flanco descendente (falling edge)
+        bcm2835_gpio_fen(INTERRUPT_PIN);
+
+        #ifdef DBG_GPIO
+            std::cout<<"Esperando interrupción en el pin : "<< INTERRUPT_PIN <<" ... \n";
+        #endif
     }
 
     void Gpio_t::close(){
@@ -103,56 +119,31 @@ volatile bool keep_running = true;
     }
 
 
-
-    void Gpio_t::app(bool& flag)
-    {        
-    if(keep_running)
-    {
-       if (bcm2835_gpio_eds(INTERRUPT_PIN)) {
-            // Limpia el flag de evento de detección
+    bool Gpio_t::interrupt_handler() {
+        if (bcm2835_gpio_eds(INTERRUPT_PIN)) {
+            // Limpia el flag de evento
             bcm2835_gpio_set_eds(INTERRUPT_PIN);
 
-            // Llama a la función que maneja la interrupción
-            interrupt_handler();
-            flag = false;
+            interrupt_count++;
+            std::cout << "Interrupci      n recibida: Mensaje " << interrupt_count >
+
+            if (interrupt_count >= 3) {
+                running = false; // Detener el programa despu      s de 3 interrupci
+            }
+            return false;
+        }
+        else{
+            return true;
         }
     }
-    else{
-        flag = true;
-    }
- /*
-            if (bcm2835_gpio_lev(INTERRUPT_INPT) == LOW) {
-                std::cout<<"interrupt\n";
-                if (!input_interrupt) {
-                    // Cambia el estado del LED
-                    led_state = !led_state;
-                    bcm2835_gpio_write(LED_OUT, led_state ? HIGH : LOW);
 
-                    // Marca que el botón ha sido presionado
-                    input_interrupt = true;
-                    return;
-                }
-            } else {
-                // Si el botón no está presionado, resetea la variable
-                //input_interrupt = false;
-                input_interrupt = true;
-            }
-            // Pequeña espera para evitar rebotes
-            delay_ms(10);
-        //}
-        */
+    void Gpio_t::app(bool& flag){        
+        if(running){
+            flag =interrupt_handler();
+            // Peque      o retraso para evitar consumir demasiados recursos
+            bcm2835_delay(100);                        
+        }        
     }
 
-    void Gpio_t::interrupt_handler() {
-        printf("Interrupción recibida: Borde de bajada detectado (EDGE_FALLING).\n");
-    }
-
-    static void sig_handler(int sig) {
-        keep_running = false;
-    }
-
-    void Gpio_t::function(){
-        signal(SIGINT, sig_handler);
-    }
 }
 
