@@ -104,7 +104,7 @@ namespace GPIO{
         //bool button_pressed = false;
         //while (true) {
             // Lee el estado del botón (activo en bajo)
-            check_status();
+
             if (bcm2835_gpio_lev(INTERRUPT_INPT) == LOW) {
                 std::cout<<"interrupt\n";
                 if (!input_interrupt) {
