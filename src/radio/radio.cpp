@@ -87,7 +87,7 @@ std::string msj_txt = {"MRF24J40 RX"};
             //const char* msj = reinterpret_cast<const char* >(&buffer_transmiter);
             const uint8_t* struct_ptr = reinterpret_cast<const uint8_t*>(&buffer_transmiter);
             size_t struct_size = sizeof(DATA::packet_tx);
-             std::vector<uint8_t> msj(struct_ptr, struct_ptr + struct_size);
+             std::vector<char> msj(struct_ptr, struct_ptr + struct_size);
             //= reinterpret_cast<const char* >(&buffer_transmiter);
 
             //std::memcpy(msj,buffer_transmiter,strlen(buffer_transmiter));
