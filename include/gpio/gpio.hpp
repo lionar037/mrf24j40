@@ -43,8 +43,8 @@ namespace GPIO{
             void close();
         private :
             inline static bool led_state;
-            constexpr int IN_INTERRUPT = RPI_V2_GPIO_P1_23;
-            constexpr int OUT_INTERRUPT = RPI_V2_GPIO_P1_12;
+            static constexpr int IN_INTERRUPT = RPI_V2_GPIO_P1_23;
+            static constexpr int OUT_INTERRUPT = RPI_V2_GPIO_P1_12;
 
     };
 }
