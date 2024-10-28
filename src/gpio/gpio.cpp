@@ -53,7 +53,7 @@ namespace GPIO{
             bcm2835_spi_chipSelect(BCM2835_SPI_CS0);//for mode SPI
             #endif
 
-            bcm2835_gpio_fsel( IN_INTERRUPT     , BCM2835_GPIO_FSEL_INTP );
+            bcm2835_gpio_fsel( IN_INTERRUPT     , BCM2835_GPIO_FSEL_INPT );
             bcm2835_gpio_fsel( OUT_INTERRUPT    , BCM2835_GPIO_FSEL_OUTP );                
 
             // Habilita el pull-up resistor para el botón
