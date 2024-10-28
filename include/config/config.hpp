@@ -71,7 +71,7 @@
 //#define DBG_PRINT_GET_INFO
 #define DBG_GPIO
 //#define DBG_OLED
-#define DBG_SPI
+//#define DBG_SPI
 
 
 //config QR string 
