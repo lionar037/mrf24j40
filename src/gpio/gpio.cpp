@@ -96,6 +96,7 @@ namespace GPIO{
         //while (true) {
             // Lee el estado del botón (activo en bajo)
             if (bcm2835_gpio_lev(INTERRUPT_INPT) == LOW) {
+                std::cout<<"interrupt\n";
                 if (!input_interrupt) {
                     // Cambia el estado del LED
                     led_state = !led_state;
@@ -103,6 +104,7 @@ namespace GPIO{
 
                     // Marca que el botón ha sido presionado
                     input_interrupt = true;
+                    return;
                 }
             } else {
                 // Si el botón no está presionado, resetea la variable
